@@ -1,0 +1,799 @@
+/* Test Centre engine embedded in the main HTML for reliable local Chrome use. */
+const JEE_CHAPTERS={
+ Physics:['Units, Dimensions & Errors','Vectors','Kinematics','Laws of Motion','Work, Energy & Power','Centre of Mass & Collisions','Rotational Motion','Gravitation','Properties of Solids & Fluids','Thermal Properties of Matter','Thermodynamics','Kinetic Theory of Gases','Oscillations','Waves','Electrostatics','Capacitance','Current Electricity','Magnetic Effects of Current','Magnetism & Matter','Electromagnetic Induction','Alternating Current','Electromagnetic Waves','Ray Optics','Wave Optics','Dual Nature of Matter','Atoms','Nuclei','Semiconductor Electronics','Experimental Skills'],
+ Chemistry:['Some Basic Concepts of Chemistry','Atomic Structure','Chemical Bonding','Chemical Thermodynamics','Solutions','Equilibrium','Redox Reactions & Electrochemistry','Chemical Kinetics','Periodic Table & Periodicity','p-Block Elements','d- and f-Block Elements','Coordination Compounds','Purification & Characterisation','Basic Principles of Organic Chemistry','Hydrocarbons','Organic Compounds Containing Halogens','Organic Compounds Containing Oxygen','Organic Compounds Containing Nitrogen','Biomolecules','Principles Related to Practical Chemistry'],
+ Mathematics:['Sets, Relations & Functions','Complex Numbers & Quadratic Equations','Matrices','Determinants','Permutations & Combinations','Binomial Theorem','Sequences & Series','Limits, Continuity & Differentiability','Applications of Derivatives','Integral Calculus','Differential Equations','Coordinate Geometry: Straight Lines','Circles','Conic Sections','Three-Dimensional Geometry','Vector Algebra','Statistics','Probability','Trigonometry']
+};
+const JEE_QUESTIONS=[
+{ s:'Physics',c:'Units, Dimensions & Errors',t:'mcq',q:'The dimensional formula of impulse is:',o:['[M L T⁻¹]','[M L T⁻²]','[M L² T⁻²]','[M T⁻¹]'],a:0,e:'Impulse = change in momentum, so its dimensions are [M L T⁻¹].'},
+{ s:'Physics',c:'Kinematics',t:'mcq',q:'A body starts from rest and moves with constant acceleration 2 m s⁻². Its displacement in 3 s is:',o:['6 m','9 m','12 m','18 m'],a:1,e:'s = ut + ½at² = 0 + ½ × 2 × 9 = 9 m.'},
+{ s:'Physics',c:'Laws of Motion',t:'mcq',q:'A 2 kg body experiences a net force of 10 N. Its acceleration is:',o:['2 m s⁻²','5 m s⁻²','10 m s⁻²','20 m s⁻²'],a:1,e:'Newton’s second law gives a = F/m = 10/2 = 5 m s⁻².'},
+{ s:'Physics',c:'Work, Energy & Power',t:'num',q:'A 2 kg object moving at 3 m s⁻¹ has kinetic energy (in joules). Enter the nearest integer.',a:9,e:'K = ½mv² = ½ × 2 × 9 = 9 J.'},
+{ s:'Physics',c:'Electrostatics',t:'mcq',q:'Two point charges are separated by distance r. If the distance is doubled, the electrostatic force becomes:',o:['F/2','F/4','2F','4F'],a:1,e:'By Coulomb’s law, force varies inversely as r²; doubling r makes it one-fourth.'},
+{ s:'Physics',c:'Current Electricity',t:'num',q:'A 6 Ω resistor is connected across 12 V. Current through it in amperes is:',a:2,e:'Ohm’s law: I = V/R = 12/6 = 2 A.'},
+{ s:'Chemistry',c:'Some Basic Concepts of Chemistry',t:'mcq',q:'The number of moles present in 18 g of water (molar mass 18 g mol⁻¹) is:',o:['0.5','1','2','18'],a:1,e:'Moles = given mass / molar mass = 18/18 = 1 mol.'},
+{ s:'Chemistry',c:'Atomic Structure',t:'mcq',q:'The maximum number of electrons that can be accommodated in the shell with n = 3 is:',o:['8','18','32','9'],a:1,e:'Maximum capacity of a shell is 2n² = 2 × 9 = 18.'},
+{ s:'Chemistry',c:'Chemical Bonding',t:'mcq',q:'The molecular shape of NH₃ is:',o:['Trigonal planar','Trigonal pyramidal','Tetrahedral','Linear'],a:1,e:'NH₃ has three bond pairs and one lone pair around nitrogen, giving a trigonal pyramidal molecular shape.'},
+{ s:'Chemistry',c:'Chemical Thermodynamics',t:'num',q:'For a process, q = +50 J and w = −20 J (chemistry sign convention). ΔU in joules is:',a:30,e:'First law: ΔU = q + w = 50 − 20 = 30 J.'},
+{ s:'Chemistry',c:'Solutions',t:'mcq',q:'For an ideal solution, the enthalpy of mixing is:',o:['Positive','Negative','Zero','Always infinite'],a:2,e:'For an ideal solution, intermolecular interactions are effectively unchanged on mixing, so ΔHmix = 0.'},
+{ s:'Chemistry',c:'Chemical Kinetics',t:'mcq',q:'The unit of the rate constant for a first-order reaction is:',o:['mol L⁻¹ s⁻¹','s⁻¹','L mol⁻¹ s⁻¹','mol² L⁻² s⁻¹'],a:1,e:'For a first-order reaction, k has dimensions of inverse time, typically s⁻¹.'},
+{ s:'Mathematics',c:'Complex Numbers & Quadratic Equations',t:'mcq',q:'The modulus of the complex number 3 + 4i is:',o:['3','4','5','7'],a:2,e:'|3 + 4i| = √(3² + 4²) = 5.'},
+{ s:'Mathematics',c:'Matrices',t:'mcq',q:'If A is a 2 × 3 matrix and B is a 3 × 4 matrix, the order of AB is:',o:['2 × 4','3 × 3','4 × 2','2 × 3'],a:0,e:'The inner dimensions match (3); the product has the outer dimensions 2 × 4.'},
+{ s:'Mathematics',c:'Permutations & Combinations',t:'num',q:'The number of ways to arrange 4 distinct books in a row is:',a:24,e:'The number of permutations is 4! = 24.'},
+{ s:'Mathematics',c:'Sequences & Series',t:'mcq',q:'The 10th term of the arithmetic progression 3, 7, 11, ... is:',o:['35','39','43','40'],a:1,e:'aₙ = a + (n−1)d = 3 + 9 × 4 = 39.'},
+{ s:'Mathematics',c:'Differential Equations',t:'mcq',q:'The order of the differential equation d²y/dx² + 3(dy/dx) + y = 0 is:',o:['0','1','2','3'],a:2,e:'The highest order derivative present is the second derivative.'},
+{ s:'Mathematics',c:'Probability',t:'num',q:'A fair die is thrown once. The number of outcomes in the event “even number” is:',a:3,e:'The even outcomes are 2, 4 and 6: three outcomes.'}
+];
+
+JEE_QUESTIONS.push(
+{s:'Physics',c:'Vectors',t:'mcq',q:'Two vectors of magnitudes 3 and 4 have an angle of 90° between them. The magnitude of their resultant is:',o:['1','5','7','12'],a:1,e:'R = √(3² + 4²) = 5.'},
+{s:'Physics',c:'Kinematics',t:'mcq',q:'A particle has velocity v = 4t m s⁻¹. Its displacement from t = 0 to t = 3 s is:',o:['12 m','18 m','24 m','36 m'],a:1,e:'Displacement = integral 4t dt from 0 to 3 = 2t² evaluated = 18 m.'},
+{s:'Physics',c:'Laws of Motion',t:'mcq',q:'A block rests on a rough horizontal surface. If the applied horizontal force is below limiting friction, the frictional force is:',o:['Zero','Equal to the applied force in magnitude','Always μN','Greater than the applied force'],a:1,e:'Static friction adjusts to equal the applied force until its limiting value.'},
+{s:'Physics',c:'Work, Energy & Power',t:'mcq',q:'A force F = 2x acts along x. Work done from x = 0 to x = 3 m is:',o:['6 J','9 J','12 J','18 J'],a:1,e:'W = integral 2x dx from 0 to 3 = x² evaluated = 9 J.'},
+{s:'Physics',c:'Rotational Motion',t:'mcq',q:'The moment of inertia of a thin ring about an axis through its centre and perpendicular to its plane is:',o:['½MR²','MR²','2MR²','¼MR²'],a:1,e:'For a thin ring, all mass lies at radius R, so I = MR².'},
+{s:'Physics',c:'Gravitation',t:'mcq',q:'At a height equal to Earth’s radius above its surface, acceleration due to gravity is approximately:',o:['g','g/2','g/4','g/8'],a:2,e:'Distance from Earth centre is 2R; g′ = GM/(2R)² = g/4.'},
+{s:'Physics',c:'Thermodynamics',t:'mcq',q:'For an ideal gas undergoing an isothermal process, the change in internal energy is:',o:['Positive','Negative','Zero','Depends on pressure only'],a:2,e:'Internal energy of an ideal gas depends only on temperature; ΔT = 0.'},
+{s:'Physics',c:'Oscillations',t:'mcq',q:'For a spring-mass system, if the mass is made four times while the spring constant is unchanged, the time period becomes:',o:['T/2','T','2T','4T'],a:2,e:'T = 2π√(m/k), so quadrupling m doubles T.'},
+{s:'Physics',c:'Waves',t:'mcq',q:'Two coherent waves of equal amplitude produce constructive interference when their path difference is:',o:['(n + ½)λ','(2n + 1)λ/4','nλ','λ/4'],a:2,e:'Constructive interference occurs for path difference nλ.'},
+{s:'Physics',c:'Capacitance',t:'mcq',q:'A dielectric of constant K completely fills a parallel-plate capacitor isolated from a battery. Its capacitance becomes:',o:['C/K','C','KC','K²C'],a:2,e:'Capacitance increases by the dielectric constant: C′ = KC.'},
+{s:'Physics',c:'Magnetic Effects of Current',t:'mcq',q:'A charged particle enters a uniform magnetic field with velocity perpendicular to the field. Its path is:',o:['Straight line','Circular','Parabolic','Elliptical'],a:1,e:'Magnetic force is perpendicular to velocity and acts as centripetal force.'},
+{s:'Physics',c:'Electromagnetic Induction',t:'mcq',q:'The magnitude of induced emf in a coil is proportional to the:',o:['Magnetic flux itself','Rate of change of magnetic flux','Resistance only','Current squared'],a:1,e:'Faraday’s law: |ε| = N|dΦ/dt|.'},
+{s:'Physics',c:'Ray Optics',t:'mcq',q:'An object is placed at 2f from a convex lens. The image is formed:',o:['At f','At 2f','At infinity','Between f and 2f'],a:1,e:'For an object at 2f, a convex lens forms a real, inverted image at 2f.'},
+{s:'Physics',c:'Dual Nature of Matter',t:'mcq',q:'If the frequency of incident light is increased above threshold frequency, the maximum kinetic energy of photoelectrons:',o:['Decreases','Remains unchanged','Increases','Becomes zero'],a:2,e:'Kmax = hν − φ, so it increases linearly with frequency.'},
+{s:'Chemistry',c:'Atomic Structure',t:'mcq',q:'The number of orbitals in a shell with principal quantum number n = 4 is:',o:['4','8','16','32'],a:2,e:'Total orbitals in a shell = n² = 16.'},
+{s:'Chemistry',c:'Chemical Bonding',t:'mcq',q:'Which molecule has zero dipole moment despite having polar bonds?',o:['H₂O','NH₃','CO₂','SO₂'],a:2,e:'CO₂ is linear and its two C=O bond dipoles cancel.'},
+{s:'Chemistry',c:'Equilibrium',t:'mcq',q:'For an exothermic reaction at equilibrium, increasing temperature shifts equilibrium:',o:['Towards products','Towards reactants','No change','First right then left'],a:1,e:'Heat behaves as a product in an exothermic reaction; added heat shifts equilibrium left.'},
+{s:'Chemistry',c:'Redox Reactions & Electrochemistry',t:'mcq',q:'The oxidation number of chromium in K₂Cr₂O₇ is:',o:['+3','+4','+6','+7'],a:2,e:'2(+1) + 2x + 7(−2) = 0 gives x = +6.'},
+{s:'Chemistry',c:'Chemical Kinetics',t:'mcq',q:'For a first-order reaction, the half-life is:',o:['Proportional to initial concentration','Inversely proportional to initial concentration','Independent of initial concentration','Proportional to square of concentration'],a:2,e:'t½ = 0.693/k for a first-order reaction.'},
+{s:'Chemistry',c:'Periodic Table & Periodicity',t:'mcq',q:'Across a period from left to right, the general trend in atomic radius is:',o:['Increases','Decreases','Remains constant','Changes randomly only'],a:1,e:'Effective nuclear charge generally increases across a period, pulling electrons closer.'},
+{s:'Chemistry',c:'Coordination Compounds',t:'mcq',q:'The coordination number of cobalt in [Co(NH₃)₆]Cl₃ is:',o:['3','4','6','9'],a:2,e:'Six monodentate NH₃ ligands are directly bonded to cobalt.'},
+{s:'Chemistry',c:'Basic Principles of Organic Chemistry',t:'mcq',q:'The most stable carbocation among the following is generally:',o:['CH₃⁺','CH₃CH₂⁺','(CH₃)₂CH⁺','(CH₃)₃C⁺'],a:3,e:'Tertiary carbocations are stabilised by hyperconjugation and the +I effect of three alkyl groups.'},
+{s:'Chemistry',c:'Hydrocarbons',t:'mcq',q:'Addition of HBr to propene in the absence of peroxide gives mainly:',o:['1-bromopropane','2-bromopropane','1,2-dibromopropane','Propane'],a:1,e:'Markovnikov addition places Br on the more substituted carbon, giving 2-bromopropane.'},
+{s:'Chemistry',c:'Organic Compounds Containing Oxygen',t:'mcq',q:'Which reagent is commonly used to distinguish aldehydes from most ketones?',o:['Tollens’ reagent','NaCl solution','Dilute HCl','Bromine water for all ketones'],a:0,e:'Aldehydes generally reduce Tollens’ reagent to give a silver mirror.'},
+{s:'Chemistry',c:'Biomolecules',t:'mcq',q:'The linkage joining two amino acids in a peptide is called:',o:['Glycosidic bond','Peptide bond','Phosphodiester bond','Hydrogen bond'],a:1,e:'A peptide (amide) bond forms between the carboxyl and amino groups.'},
+{s:'Mathematics',c:'Complex Numbers & Quadratic Equations',t:'mcq',q:'If z = 1 + i, then z² is:',o:['2','2i','1 + 2i','−2i'],a:1,e:'(1+i)² = 1 + 2i + i² = 2i.'},
+{s:'Mathematics',c:'Binomial Theorem',t:'mcq',q:'The coefficient of x² in (1 + 2x)⁴ is:',o:['12','18','24','32'],a:2,e:'Choose the x² term: C(4,2)(2x)² = 6×4x² = 24x².'},
+{s:'Mathematics',c:'Limits, Continuity & Differentiability',t:'mcq',q:'The value of lim(x→0) sin(5x)/x is:',o:['0','1','5','1/5'],a:2,e:'Rewrite as 5·sin(5x)/(5x); the standard limit is 1.'},
+{s:'Mathematics',c:'Applications of Derivatives',t:'mcq',q:'The function f(x) = x² − 4x + 7 has its minimum at:',o:['x = −2','x = 0','x = 2','x = 4'],a:2,e:'f′(x)=2x−4=0 gives x=2; f″(x)=2>0, so it is a minimum.'},
+{s:'Mathematics',c:'Integral Calculus',t:'mcq',q:'The value of ∫₀¹ 2x dx is:',o:['0','1','2','4'],a:1,e:'Integral is [x²]₀¹ = 1.'},
+{s:'Mathematics',c:'Differential Equations',t:'mcq',q:'The general solution of dy/dx = 3x² is:',o:['y = 3x + C','y = x³ + C','y = 6x + C','y = x² + C'],a:1,e:'Integrating gives y = x³ + C.'},
+{s:'Mathematics',c:'Coordinate Geometry: Straight Lines',t:'mcq',q:'The slope of the line 2x + 3y − 6 = 0 is:',o:['2/3','−2/3','3/2','−3/2'],a:1,e:'Rearrange y = −(2/3)x + 2; slope is −2/3.'},
+{s:'Mathematics',c:'Circles',t:'mcq',q:'The radius of the circle x² + y² − 6x + 8y + 9 = 0 is:',o:['2','3','4','5'],a:2,e:'r² = (−3)² + 4² − 9 = 16, so r = 4.'},
+{s:'Mathematics',c:'Conic Sections',t:'mcq',q:'The eccentricity of a parabola is:',o:['0','Less than 1','1','Greater than 1'],a:2,e:'A parabola has eccentricity exactly 1.'},
+{s:'Mathematics',c:'Three-Dimensional Geometry',t:'mcq',q:'The distance between (1,2,3) and (1,2,7) is:',o:['2','3','4','5'],a:2,e:'Distance = √((0)²+(0)²+(4)²) = 4.'},
+{s:'Mathematics',c:'Vector Algebra',t:'mcq',q:'If two non-zero vectors have zero dot product, the angle between them is:',o:['0°','45°','90°','180°'],a:2,e:'A·B = |A||B|cosθ = 0 implies cosθ = 0.'},
+{s:'Mathematics',c:'Probability',t:'mcq',q:'Two fair coins are tossed. The probability of getting exactly one head is:',o:['1/4','1/2','3/4','1'],a:1,e:'Favourable outcomes HT and TH out of four equally likely outcomes: 2/4 = 1/2.'},
+{s:'Mathematics',c:'Statistics',t:'mcq',q:'The mean of 2, 4, 6, 8 is:',o:['4','5','6','7'],a:1,e:'Mean = (2+4+6+8)/4 = 5.'},
+{s:'Mathematics',c:'Permutations & Combinations',t:'mcq',q:'The number of ways to choose 2 students from 5 students is:',o:['5','10','20','25'],a:1,e:'⁵C₂ = 5!/(2!3!) = 10.'}
+);
+
+/* Original, parameter-varied JEE Main practice bank. These are not labelled as NTA PYQs. */
+const BANK_LEAD_INS=[
+  'Select the correct option: ', 'Choose the most appropriate answer: ', 'Which option correctly answers this question? ', 'Identify the correct response: ', 'Find the statement that matches the given concept: ', 'A JEE Main practice check asks: ', 'Which of the following is correct? ', 'Complete the following concept check: ', 'Pick the option consistent with the stated principle: ', 'In the situation described, the correct answer is: ', 'Choose the scientifically or mathematically valid statement: ', 'Which answer follows from the given condition? ', 'Select the best-supported result: ', 'Consider the following and choose the correct option: ', 'Which response is consistent with the governing rule? ', 'Determine the correct choice: ', 'Which option gives the required result? ', 'For this practice problem, select the valid answer: ', 'Identify the option that correctly states the result: ', 'Choose the answer that satisfies the stated condition: '
+];
+function bankMCQ(s,c,stem,correct,wrong,why,tag){
+  const lead=BANK_LEAD_INS[(Number(tag)||0)%BANK_LEAD_INS.length];
+  stem=lead+stem;
+  const ans=String(correct); let choices=[ans,...wrong.map(String)];
+  const unique=[]; for(const v of choices){if(!unique.includes(v))unique.push(v);}
+  let k=1; while(unique.length<4 && k<20){const n=Number(correct);const v=Number.isFinite(n)?String(n+k):`Alternative ${k}`;if(!unique.includes(v))unique.push(v);k++;}
+  while(unique.length<4)unique.push(`Alternative ${unique.length+1}`);
+  const shift=(tag||0)%4; const opts=unique.slice(shift).concat(unique.slice(0,shift));
+  return {s,c,t:'mcq',q:stem,o:opts,a:opts.indexOf(ans),e:why,source:'Original practice',difficulty:'Foundation / Concept Check'};
+}
+function bankNum(s,c,stem,answer,why){return {s,c,t:'num',q:stem,a:Number(answer),e:why,source:'Original practice',difficulty:'Foundation / Concept Check'};}
+function nWrong(x){const a=Number(x);return [a+1,a===0?2:a-1,a*2+3].map(v=>String(Number.isInteger(v)?v:Number(v.toFixed(2))));}
+function P(ch){const t=ch.toLowerCase();const fs=[];const add=(fn)=>fs.push(fn);const x=v=>v+2;
+ if(t.includes('units')){
+  add(v=>bankMCQ('Physics',ch,'The dimensional formula of speed is:', '[L T⁻¹]',['[L T⁻²]','[M L T⁻¹]','[M L T⁻²]'],'Speed = distance/time.',v));
+  add(v=>{let m=x(v),vol=m*2;return bankMCQ('Physics',ch,`A body of mass ${m} kg occupies volume ${vol} m³. Its density in kg m⁻³ is:`,m/vol,['1','2','4'],'Density = mass/volume.',v)});
+  add(v=>bankMCQ('Physics',ch,'The dimensional formula of Planck’s constant is:','[M L² T⁻¹]',['[M L T⁻¹]','[M L² T⁻²]','[M T⁻¹]'],'Planck constant = energy × time.',v));
+  add(v=>bankMCQ('Physics',ch,'If the percentage errors in length and breadth are 2% and 3%, the percentage error in their product is:','5%',['1%','6%','0.5%'],'For a product, maximum fractional errors add.',v));
+  add(v=>{let a=10+v;return bankMCQ('Physics',ch,`A vernier has 10 divisions equal to 9 mm on the main scale. If 1 MSD = 1 mm, its least count is:`,`0.1 mm`,['0.01 mm','0.9 mm','1.1 mm'],'Least count = 1 MSD − 1 VSD = 1 − 0.9 = 0.1 mm.',v)});
+ } else if(t.includes('vector')){
+  add(v=>{let k=x(v);return bankMCQ('Physics',ch,`Two perpendicular vectors have magnitudes ${3*k} and ${4*k}. The magnitude of their resultant is:`,`${5*k}`,[`${k}`,`${7*k}`,`${12*k}`],'Use R = √(A²+B²) and the 3–4–5 triangle.',v)});
+  add(v=>{let k=x(v);return bankMCQ('Physics',ch,`The dot product of vectors A = ${k}i + ${2*k}j and B = ${2*k}i − ${k}j is:`,`${0}`,[`${k*k}`,`${2*k*k}`,`${-k*k}`],'A·B = k(2k) + (2k)(−k) = 0.',v)});
+  add(v=>{let k=x(v);return bankMCQ('Physics',ch,`A vector of magnitude ${2*k} makes 60° with the positive x-axis. Its x-component is:`,`${k}`,[`${2*k}`,`${Math.round(1.732*k)}`,`${0}`],'Ax = A cos 60° = A/2.',v)});
+  add(v=>{let k=x(v);return bankMCQ('Physics',ch,`The magnitude of the cross product of two vectors of magnitudes ${k} and ${2*k} at 90° is:`,`${2*k*k}`,[`${k*k}`,`${3*k*k}`,`${0}`],'|A×B| = AB sinθ.',v)});
+  add(v=>{let k=x(v);return bankMCQ('Physics',ch,`Two collinear vectors of magnitudes ${3*k} and ${k} act in opposite directions. Resultant magnitude is:`,`${2*k}`,[`${4*k}`,`${3*k}`,`${k}`],'For opposite collinear vectors, subtract magnitudes.',v)});
+ } else if(t.includes('kinematic')){
+  add(v=>{let u=x(v),a=2,t=3;return bankMCQ('Physics',ch,`A particle has initial speed ${u} m s⁻¹ and acceleration ${a} m s⁻². Its speed after ${t} s is:`,`${u+a*t}`,[`${u+a}`,`${u+a*t*t}`,`${u+2*a*t}`],'Use v = u + at.',v)});
+  add(v=>{let u=x(v),a=2,T=2;return bankMCQ('Physics',ch,`A body starts with speed ${u} m s⁻¹ and accelerates at ${a} m s⁻² for ${T} s. Displacement is:`,`${u*T+a*T*T/2}`,[`${u*T+a*T}`,`${u*T+a*T*T}`,`${u*T}`],'Use s = ut + ½at².',v)});
+  add(v=>{let u=2*x(v),a=2,T=3;return bankMCQ('Physics',ch,`A body changes its speed uniformly from ${u} to ${u+a*T} m s⁻¹ in ${T} s. Its average speed is:`,`${u+a*T/2}`,[`${u+a*T}`,`${u/2}`,`${a*T/2}`],'For uniform acceleration, average speed = (u+v)/2.',v)});
+  add(v=>{let u=x(v),a=2;return bankMCQ('Physics',ch,`A body starts from rest and travels with acceleration ${a} m s⁻². Distance covered in ${u} s is:`,`${a*u*u/2}`,[`${a*u}`,`${a*u*u}`,`${u*u/2}`],'s = ½at².',v)});
+  add(v=>{let g=10,h=x(v);return bankMCQ('Physics',ch,`A ball is projected vertically upward with speed ${2*h} m s⁻¹. Taking g = 10 m s⁻², its maximum height is:`,`${(2*h)**2/(2*g)}`,[`${(2*h)**2/g}`,`${2*h/g}`,`${h}`],'At the top v = 0; H = u²/(2g).',v)});
+ } else if(t.includes('laws of motion')){
+  add(v=>{let m=x(v),a=2;return bankMCQ('Physics',ch,`A net force acts on a ${m} kg body and produces acceleration ${a} m s⁻². The force is:`,`${m*a} N`,[`${m+a} N`,`${m/a} N`,`${m*a*a} N`],'Newton’s second law: F = ma.',v)});
+  add(v=>{let m=x(v),mu=.5,g=10;return bankMCQ('Physics',ch,`A ${m} kg block rests on a horizontal surface with coefficient of friction 0.5. The limiting friction (g = 10 m s⁻²) is:`,`${m*mu*g} N`,[`${m*g} N`,`${m*mu} N`,`${m*g/mu} N`],'fₘₐₓ = μN = μmg.',v)});
+  add(v=>{let m=x(v),du=3;return bankMCQ('Physics',ch,`A ${m} kg object changes velocity by 3 m s⁻¹. Magnitude of impulse is:`,`${m*du} N s`,[`${m+du} N s`,`${m*du*du} N s`,`${du/m} N s`],'Impulse = change in momentum = mΔv.',v)});
+  add(v=>{let m=x(v),r=2,vv=3;return bankMCQ('Physics',ch,`A ${m} kg object moves at 3 m s⁻¹ in a circle of radius 2 m. Centripetal force is:`,`${m*vv*vv/r} N`,[`${m*vv/r} N`,`${m*vv*vv*r} N`,`${m*r/vv} N`],'Fc = mv²/r.',v)});
+  add(v=>{let m=x(v),a=3;return bankMCQ('Physics',ch,`A ${m} kg lift accelerates upward at 3 m s⁻². Taking g = 10 m s⁻², the apparent weight is:`,`${m*13} N`,[`${m*7} N`,`${m*10} N`,`${m*3} N`],'N = m(g+a) for upward acceleration.',v)});
+ } else if(t.includes('work, energy')){
+  add(v=>{let m=x(v);return bankMCQ('Physics',ch,`Kinetic energy of a ${m} kg body moving at 2 m s⁻¹ is:`,`${2*m} J`,[`${m} J`,`${4*m} J`,`${m/2} J`],'K = ½mv².',v)});
+  add(v=>{let F=x(v),s=3;return bankMCQ('Physics',ch,`A constant force ${F} N acts along displacement ${s} m. Work done is:`,`${F*s} J`,[`${F+s} J`,`${F/s} J`,`${F*s*s} J`],'W = Fs cos 0°.',v)});
+  add(v=>{let m=x(v),h=2;return bankMCQ('Physics',ch,`A ${m} kg body is raised by 2 m. Taking g = 10 m s⁻², its gain in potential energy is:`,`${20*m} J`,[`${10*m} J`,`${40*m} J`,`${m} J`],'ΔU = mgh.',v)});
+  add(v=>{let W=10*x(v),t=2;return bankMCQ('Physics',ch,`A machine performs ${W} J work in 2 s. Its average power is:`,`${W/2} W`,[`${W*2} W`,`${W+2} W`,`${2/W} W`],'P = W/t.',v)});
+  add(v=>{let k=2*x(v),z=2;return bankMCQ('Physics',ch,`A spring of constant ${k} N m⁻¹ is compressed by 2 m. Stored energy is:`,`${k*z*z/2} J`,[`${k*z} J`,`${k*z*z} J`,`${k/2} J`],'Spring energy = ½kx².',v)});
+ } else if(t.includes('centre of mass')){
+  add(v=>{let m1=x(v),m2=2*m1;return bankMCQ('Physics',ch,`Masses ${m1} kg and ${m2} kg are at x = 0 and x = 3 m. The centre of mass coordinate is:`,`${2} m`,['1 m','1.5 m','2.5 m'],'xCOM = (m1x1+m2x2)/(m1+m2).',v)});
+  add(v=>{let m=x(v),u=3;return bankMCQ('Physics',ch,`A ${m} kg body moving at 3 m s⁻¹ has linear momentum:`,`${m*u} kg m s⁻¹`,[`${m+u} kg m s⁻¹`,`${m*u*u} kg m s⁻¹`,`${u/m} kg m s⁻¹`],'p = mv.',v)});
+  add(v=>{let m=x(v);return bankMCQ('Physics',ch,`A ${m} kg body at rest breaks into two parts. One part of mass 1 kg moves at 4 m s⁻¹. The other part's momentum magnitude is:`,`4 kg m s⁻¹`,[`${m*4} kg m s⁻¹`,`1 kg m s⁻¹`,`0 kg m s⁻¹`],'Initial momentum is zero; the two fragment momenta are equal and opposite.',v)});
+  add(v=>{let m=x(v),u=2;return bankMCQ('Physics',ch,`A ${m} kg cart moving at 2 m s⁻¹ sticks to an identical stationary cart. Their common speed is:`,`1 m s⁻¹`,['2 m s⁻¹','4 m s⁻¹','0.5 m s⁻¹'],'Conservation of momentum: mu = 2mV.',v)});
+  add(v=>{let m=x(v),dv=2;return bankMCQ('Physics',ch,`A ${m} kg object experiences a velocity change of 2 m s⁻¹. Magnitude of momentum change is:`,`${2*m} kg m s⁻¹`,[`${m} kg m s⁻¹`,`${4*m} kg m s⁻¹`,`2 kg m s⁻¹`],'Δp = mΔv.',v)});
+ } else if(t.includes('rotational')){
+  add(v=>{let r=2,F=x(v);return bankMCQ('Physics',ch,`A force ${F} N acts perpendicular to a lever arm of 2 m. Torque magnitude is:`,`${2*F} N m`,[`${F/2} N m`,`${F+2} N m`,`${F} N m`],'τ = rF sin 90°.',v)});
+  add(v=>{let I=x(v),a=2;return bankMCQ('Physics',ch,`A body has moment of inertia ${I} kg m² and angular acceleration 2 rad s⁻². Net torque is:`,`${2*I} N m`,[`${I/2} N m`,`${I+2} N m`,`${4*I} N m`],'τ = Iα.',v)});
+  add(v=>{let I=x(v),w=3;return bankMCQ('Physics',ch,`A rotating body has I = ${I} kg m² and angular speed 3 rad s⁻¹. Angular momentum is:`,`${3*I} kg m² s⁻¹`,[`${I} kg m² s⁻¹`,`${9*I} kg m² s⁻¹`,`${I/3} kg m² s⁻¹`],'L = Iω.',v)});
+  add(v=>{let M=x(v),R=2;return bankMCQ('Physics',ch,`Moment of inertia of a thin ring of mass ${M} kg and radius 2 m about its central perpendicular axis is:`,`${4*M} kg m²`,[`${2*M} kg m²`,`${M} kg m²`,`${8*M} kg m²`],'For a ring, I = MR².',v)});
+  add(v=>{let I=x(v),w=2;return bankMCQ('Physics',ch,`Rotational kinetic energy for I = ${I} kg m² and ω = 2 rad s⁻¹ is:`,`${2*I} J`,[`${I} J`,`${4*I} J`,`${I/2} J`],'Krot = ½Iω².',v)});
+ } else if(t.includes('gravitation')){
+  add(v=>{let m=x(v);return bankMCQ('Physics',ch,`Gravitational force between two fixed masses varies with separation r as:`,`1/r²`,['r²','1/r','r'],'Newton’s law of gravitation is inverse-square.',v)});
+  add(v=>{let h=x(v);return bankMCQ('Physics',ch,`At a height equal to one Earth radius above the surface, g becomes:`,`g/4`,['g/2','g/3','g/8'],'Distance from Earth’s centre doubles; g′ = g/4.',v)});
+  add(v=>{let R=x(v);return bankMCQ('Physics',ch,`If orbital radius of a satellite is increased by a factor of 4, its orbital speed becomes:`,`half`,['double','one-fourth','four times'],'vorb ∝ 1/√r.',v)});
+  add(v=>{let M=x(v);return bankMCQ('Physics',ch,`The escape speed from a planet is independent of the:`,`mass of the escaping body`,['mass of the planet','radius of the planet','gravitational constant'],'vesc = √(2GM/R), with no dependence on the test body mass.',v)});
+  add(v=>{let r=x(v);return bankMCQ('Physics',ch,`For a circular orbit, gravitational potential energy is:`,`−GMm/r`,['−GMm/(2r)','+GMm/r','+GMm/(2r)'],'U = −GMm/r.',v)});
+ } else if(t.includes('properties of solids')||t.includes('properties of solids & fluids')){
+  add(v=>{let F=10*x(v),A=2;return bankMCQ('Physics',ch,`A force ${F} N acts normally on area 2 m². Pressure is:`,`${F/2} Pa`,[`${2*F} Pa`,`${F+2} Pa`,`${F} Pa`],'P = F/A.',v)});
+  add(v=>{let rho=1000,h=x(v);return bankMCQ('Physics',ch,`Pressure due to a water column of height ${h} m (ρ = 1000 kg m⁻³, g = 10 m s⁻²) is:`,`${10000*h} Pa`,[`${1000*h} Pa`,`${10000/h} Pa`,`${1000/h} Pa`],'Hydrostatic gauge pressure = ρgh.',v)});
+  add(v=>{let f=x(v);return bankMCQ('Physics',ch,`Young’s modulus is defined as the ratio of:`,`longitudinal stress to longitudinal strain`,['strain to stress','force to area only','pressure to volume'],'Y = stress/strain.',v)});
+  add(v=>{let A=x(v);return bankMCQ('Physics',ch,`According to Bernoulli’s principle for steady ideal flow, where fluid speed is higher, static pressure is generally:`,`lower`,['higher','unchanged in all cases','zero'],'At the same height, increased speed corresponds to reduced pressure.',v)});
+  add(v=>{let r=x(v);return bankMCQ('Physics',ch,`The SI unit of coefficient of viscosity is:`,`Pa s`,['N m','Pa/m','kg m s⁻¹'],'Dynamic viscosity has unit Pa·s.',v)});
+ } else if(t.includes('thermal properties')){
+  add(v=>{let m=x(v);return bankMCQ('Physics',ch,`Heat required to raise temperature of mass ${m} kg by 1 K when c = 1000 J kg⁻¹ K⁻¹ is:`,`${1000*m} J`,[`${m} J`,`${1000/m} J`,`${2000*m} J`],'Q = mcΔT.',v)});
+  add(v=>{let L=x(v);return bankMCQ('Physics',ch,`For a solid with linear expansion coefficient α, the fractional change in length for temperature rise ΔT is:`,`αΔT`,['α/ΔT','ΔT/α','2αΔT'],'ΔL/L = αΔT.',v)});
+  add(v=>{let m=x(v);return bankMCQ('Physics',ch,`Heat needed to melt ${m} kg of ice at 0°C, if latent heat is L, is:`,`${m}L`,['L/m','m/L','2mL'],'Q = mL.',v)});
+  add(v=>{let t=x(v);return bankMCQ('Physics',ch,`In calorimetry for an insulated system, heat lost by the hot body equals:`,`heat gained by the cold body`,['zero always','twice the heat gained','mass of hot body'],'Energy conservation: total heat exchange sums to zero.',v)});
+  add(v=>{let a=x(v);return bankMCQ('Physics',ch,`The SI unit of specific heat capacity is:`,`J kg⁻¹ K⁻¹`,['J kg K','W m⁻¹ K⁻¹','J K⁻¹'],'Specific heat is energy per unit mass per unit temperature.',v)});
+ } else if(t.includes('thermodynamics')){
+  add(v=>{let q=10*x(v),w=-2*x(v);return bankMCQ('Physics',ch,`A gas absorbs ${q} J heat and does ${-w} J work. Its change in internal energy is:`,`${q+w} J`,[`${q-w} J`,`${w-q} J`,`${q} J`],'First law: ΔU = Q − W(by gas).',v)});
+  add(v=>bankMCQ('Physics',ch,'For an ideal gas in an isothermal process, change in internal energy is:','zero',['positive','negative','equal to work'],'For an ideal gas, internal energy depends only on temperature.',v));
+  add(v=>bankMCQ('Physics',ch,'For an adiabatic process, heat exchange Q is:','zero',['positive','negative','equal to ΔU'],'Adiabatic means no heat enters or leaves the system.',v));
+  add(v=>{let p=x(v),dv=2;return bankMCQ('Physics',ch,`A gas expands at constant pressure ${p} Pa by ${dv} m³. Work done by the gas is:`,`${2*p} J`,[`${p/2} J`,`${p+2} J`,`${p} J`],'At constant pressure, W = PΔV.',v)});
+  add(v=>bankMCQ('Physics',ch,'The efficiency of a heat engine is always:','less than 1',['equal to 1','greater than 1','negative'],'A heat engine cannot convert all absorbed heat into work.',v));
+ } else if(t.includes('kinetic theory')){
+  add(v=>bankMCQ('Physics',ch,'The average translational kinetic energy per molecule of an ideal gas is:','(3/2)kT',['kT','(1/2)kT','3kT'],'Equipartition gives 3 quadratic translational degrees of freedom.',v));
+  add(v=>{let T=100*x(v);return bankMCQ('Physics',ch,`At temperature ${T} K, the RMS speed of an ideal gas is proportional to:`,`√T`,['T','1/T','1/√T'],'vrms = √(3RT/M).',v)});
+  add(v=>bankMCQ('Physics',ch,'For a monatomic ideal gas, the molar specific heat at constant volume is:','(3/2)R',['(5/2)R','(7/2)R','R'],'A monatomic ideal gas has three translational degrees of freedom.',v));
+  add(v=>bankMCQ('Physics',ch,'The ideal-gas equation is:','PV = nRT',['PV = RT/n','P = nVRT','PV = nR/T'],'Equation of state for an ideal gas.',v));
+  add(v=>bankMCQ('Physics',ch,'At the same temperature, the RMS speed is greater for a gas with:','lower molar mass',['higher molar mass','higher density always','greater pressure only'],'vrms ∝ 1/√M at fixed temperature.',v));
+ } else if(t.includes('oscillation')){
+  add(v=>{let m=x(v),k=4*m;return bankMCQ('Physics',ch,`For a spring-mass oscillator with mass ${m} kg and k = ${k} N m⁻¹, time period is:`,`π s`,['2π s','π/2 s','4π s'],'T = 2π√(m/k) = π s for k = 4m.',v)});
+  add(v=>bankMCQ('Physics',ch,'In SHM, acceleration is:','directed towards the mean position',['directed away from mean position','constant','always zero'],'a = −ω²x.',v));
+  add(v=>bankMCQ('Physics',ch,'At the mean position in ideal SHM, kinetic energy is:','maximum',['zero','minimum but non-zero','equal to potential energy always'],'Speed is maximum at mean position.',v));
+  add(v=>{let l=x(v);return bankMCQ('Physics',ch,`For a simple pendulum, if its length is made ${4} times, its period becomes:`,`2 times`,['4 times','half','unchanged'],'T ∝ √l.',v)});
+  add(v=>bankMCQ('Physics',ch,'The phase difference between displacement and velocity in SHM is:','π/2',['0','π','2π'],'Velocity is one-quarter period out of phase with displacement.',v));
+ } else if(t.includes('waves')){
+  add(v=>{let f=2*x(v),lam=3;return bankMCQ('Physics',ch,`A wave has frequency ${f} Hz and wavelength 3 m. Its speed is:`,`${3*f} m s⁻¹`,[`${f/3} m s⁻¹`,`${f+3} m s⁻¹`,`${2*f} m s⁻¹`],'v = fλ.',v)});
+  add(v=>bankMCQ('Physics',ch,'Two waves of equal frequency and fixed phase difference are called:','coherent',['incoherent','stationary','polarized'],'Coherent sources maintain a constant phase difference.',v));
+  add(v=>{let f=10+x(v),df=2;return bankMCQ('Physics',ch,`Two tuning forks have frequencies ${f} Hz and ${f+df} Hz. Beat frequency is:`,`2 Hz`,[`${f+df} Hz`,`${f} Hz`,`${df*2+1} Hz`],'Beat frequency is the absolute difference of frequencies.',v)});
+  add(v=>bankMCQ('Physics',ch,'For a string fixed at both ends, the fundamental wavelength is:','2L',['L','L/2','4L'],'The fundamental mode has half a wavelength on the string.',v));
+  add(v=>bankMCQ('Physics',ch,'Sound waves in air are:','longitudinal',['transverse','electromagnetic','polarized'],'The particles of air oscillate parallel to propagation.',v));
+ } else if(t.includes('electrostatics')){
+  add(v=>{let q=x(v),r=2;return bankMCQ('Physics',ch,`For two equal charges q separated by 2 m, the Coulomb force is proportional to:`,`q²/4`,['q/2','q²/2','4q²'],'F = kq²/r².',v)});
+  add(v=>bankMCQ('Physics',ch,'Electric field due to a point charge varies with distance r as:','1/r²',['1/r','r','r²'],'E = kq/r².',v));
+  add(v=>bankMCQ('Physics',ch,'Electric potential is a:','scalar',['vector','tensor','dimensionless quantity'],'Potential has magnitude and sign but no direction.',v));
+  add(v=>{let q=x(v),E=5;return bankMCQ('Physics',ch,`A charge ${q} C is placed in a uniform field of 5 N C⁻¹. Force magnitude is:`,`${5*q} N`,[`${q/5} N`,`${q+5} N`,`${25*q} N`],'F = qE.',v)});
+  add(v=>bankMCQ('Physics',ch,'The electric field inside a conductor in electrostatic equilibrium is:','zero',['maximum','uniform and non-zero','infinite'],'Free charges redistribute until the internal field vanishes.',v));
+ } else if(t.includes('capacitance')){
+  add(v=>{let C=x(v),V=2;return bankMCQ('Physics',ch,`A capacitor of ${C} μF is connected to 2 V. Charge stored is:`,`${2*C} μC`,[`${C/2} μC`,`${C+2} μC`,`${4*C} μC`],'Q = CV.',v)});
+  add(v=>bankMCQ('Physics',ch,'Two identical capacitors C connected in series have equivalent capacitance:','C/2',['2C','C','4C'],'For two identical capacitors in series, reciprocal capacitances add.',v));
+  add(v=>bankMCQ('Physics',ch,'Two identical capacitors C connected in parallel have equivalent capacitance:','2C',['C/2','C','4C'],'Parallel capacitances add.',v));
+  add(v=>bankMCQ('Physics',ch,'Energy stored in a capacitor is:','(1/2)CV²',['CV²','2CV²','(1/2)C²V'],'U = ½CV².',v));
+  add(v=>bankMCQ('Physics',ch,'When a dielectric completely fills a capacitor, its capacitance:','increases',['decreases','becomes zero','is unchanged always'],'C increases by the dielectric constant K.',v));
+ } else if(t.includes('current electricity')){
+  add(v=>{let R=x(v),I=2;return bankMCQ('Physics',ch,`A resistor of ${R} Ω carries 2 A. Potential difference is:`,`${2*R} V`,[`${R/2} V`,`${R+2} V`,`${4*R} V`],'Ohm’s law V = IR.',v)});
+  add(v=>bankMCQ('Physics',ch,'For resistors in series, equivalent resistance is:','the sum of resistances',['less than the smallest resistor','the reciprocal sum','the product of resistances'],'Resistances in series add directly.',v));
+  add(v=>bankMCQ('Physics',ch,'For two identical resistors R in parallel, equivalent resistance is:','R/2',['2R','R','R²'],'1/Req = 1/R + 1/R.',v));
+  add(v=>{let V=2*x(v),R=2;return bankMCQ('Physics',ch,`A ${V} V source is across a 2 Ω resistor. Power dissipated is:`,`${V*V/2} W`,[`${V/2} W`,`${V*2} W`,`${V*V} W`],'P = V²/R.',v)});
+  add(v=>bankMCQ('Physics',ch,'Kirchhoff’s junction rule is based on conservation of:','charge',['energy','mass','angular momentum'],'The algebraic sum of currents at a junction is zero.',v));
+ } else if(t.includes('magnetic effects')){
+  add(v=>{let q=x(v),v0=2,B=3;return bankMCQ('Physics',ch,`A charge ${q} C moves perpendicular to a 3 T field at 2 m s⁻¹. Magnetic force magnitude is:`,`${6*q} N`,[`${q*3} N`,`${q/6} N`,`${2*q} N`],'F = qvB sin 90°.',v)});
+  add(v=>bankMCQ('Physics',ch,'Magnetic force on a moving charge is maximum when velocity is:','perpendicular to the magnetic field',['parallel to the field','opposite to the field','zero'],'F = qvB sinθ.',v));
+  add(v=>bankMCQ('Physics',ch,'Magnetic field due to a long straight current-carrying wire varies as:','1/r',['r','1/r²','r²'],'B = μ₀I/(2πr).',v));
+  add(v=>{let I=x(v);return bankMCQ('Physics',ch,`A wire of length 1 m carries ${I} A perpendicular to a 2 T field. Force is:`,`${2*I} N`,[`${I/2} N`,`${I+2} N`,`${4*I} N`],'F = BIL sin 90°.',v)});
+  add(v=>bankMCQ('Physics',ch,'The SI unit of magnetic flux density is:','tesla',['weber','henry','ampere'],'Magnetic flux density B is measured in tesla.',v));
+ } else if(t.includes('magnetism')){
+  add(v=>bankMCQ('Physics',ch,'The magnetic dipole moment of a current loop is directed:','perpendicular to the plane of the loop',['in the plane of the loop','along the wire','opposite to current'],'The direction follows the right-hand rule.',v));
+  add(v=>bankMCQ('Physics',ch,'Torque on a magnetic dipole in a uniform field is maximum when its moment is:','perpendicular to the field',['parallel to the field','antiparallel to the field','zero'],'τ = MB sinθ.',v));
+  add(v=>bankMCQ('Physics',ch,'A diamagnetic substance has susceptibility that is:','small and negative',['large and positive','small and positive','exactly one'],'Diamagnetic response opposes the applied field.',v));
+  add(v=>bankMCQ('Physics',ch,'Magnetic field lines outside a bar magnet run from:','north to south',['south to north','east to west','centre to pole'],'Outside the magnet, field lines emerge from north and enter south.',v));
+  add(v=>bankMCQ('Physics',ch,'A paramagnetic substance is weakly:','attracted by a magnetic field',['repelled','unaffected','permanently magnetized'],'Paramagnetic materials have positive susceptibility.',v));
+ } else if(t.includes('electromagnetic induction')){
+  add(v=>{let N=x(v),d=2,t=1;return bankMCQ('Physics',ch,`A ${N}-turn coil experiences a flux change of 2 Wb in 1 s. Induced emf magnitude is:`,`${2*N} V`,[`${N/2} V`,`${N+2} V`,`${4*N} V`],'Faraday’s law: |ε| = N|ΔΦ/Δt|.',v)});
+  add(v=>bankMCQ('Physics',ch,'Lenz’s law gives the direction of induced current so that it:','opposes the change producing it',['supports the change producing it','always flows clockwise','is independent of flux'],'Lenz’s law is consistent with conservation of energy.',v));
+  add(v=>bankMCQ('Physics',ch,'The SI unit of self-inductance is:','henry',['tesla','weber','farad'],'Inductance is measured in henry.',v));
+  add(v=>bankMCQ('Physics',ch,'An induced current is produced when magnetic flux through a circuit:','changes with time',['is constant','is zero only','is maximum and constant'],'Induced emf depends on the rate of change of flux.',v));
+  add(v=>bankMCQ('Physics',ch,'Eddy currents are reduced in transformer cores by using:','laminated sheets',['a solid thick core','higher resistance wires only','a superconducting core'],'Lamination restricts circulating current loops.',v));
+ } else if(t.includes('alternating current')){
+  add(v=>bankMCQ('Physics',ch,'For a sinusoidal AC voltage, Vrms equals:','V₀/√2',['V₀','√2V₀','V₀/2'],'RMS voltage for a sine wave is peak divided by √2.',v));
+  add(v=>bankMCQ('Physics',ch,'Inductive reactance is:','ωL',['1/(ωL)','ωC','1/(ωC)'],'XL = ωL.',v));
+  add(v=>bankMCQ('Physics',ch,'Capacitive reactance is:','1/(ωC)',['ωC','ωL','1/(ωL)'],'XC = 1/(ωC).',v));
+  add(v=>bankMCQ('Physics',ch,'In a series LCR circuit at resonance, impedance is:','minimum and equal to R',['maximum','zero','equal to XL + XC'],'At resonance XL = XC and Z = R.',v));
+  add(v=>bankMCQ('Physics',ch,'The average power in a pure inductor over one complete AC cycle is:','zero',['maximum','VI','V²/R'],'Voltage and current are 90° out of phase.',v));
+ } else if(t.includes('electromagnetic waves')){
+  add(v=>bankMCQ('Physics',ch,'In vacuum, electromagnetic waves travel at:','3 × 10⁸ m s⁻¹',['3 × 10⁶ m s⁻¹','3 × 10⁵ m s⁻¹','3 × 10¹⁰ m s⁻¹'],'All electromagnetic waves travel at c in vacuum.',v));
+  add(v=>bankMCQ('Physics',ch,'In an electromagnetic wave, electric and magnetic fields are:','mutually perpendicular and perpendicular to propagation',['parallel to propagation','parallel to each other','longitudinal'],'EM waves are transverse.',v));
+  add(v=>bankMCQ('Physics',ch,'The ratio E₀/B₀ for an electromagnetic wave in vacuum is:','c',['1/c','c²','zero'],'E₀/B₀ = c.',v));
+  add(v=>bankMCQ('Physics',ch,'Among these, the highest frequency radiation is:','gamma rays',['radio waves','infrared','microwaves'],'Gamma rays occupy the high-frequency end of the spectrum.',v));
+  add(v=>bankMCQ('Physics',ch,'Microwaves are commonly used in:','radar and microwave ovens',['sterilizing surgical instruments only','radioactive dating','ultrasound imaging'],'Microwaves are used in radar and dielectric heating.',v));
+ } else if(t.includes('ray optics')){
+  add(v=>bankMCQ('Physics',ch,'For an object at 2f in front of a convex lens, the image forms:','at 2f on the other side',['at f','at infinity','between f and 2f'],'The 2f object position maps to 2f image position.',v));
+  add(v=>bankMCQ('Physics',ch,'Power of a lens of focal length 0.5 m is:','+2 D',['+0.5 D','−2 D','−0.5 D'],'P = 1/f in metres; a converging lens has positive power.',v));
+  add(v=>bankMCQ('Physics',ch,'Refractive index of a medium is:','c/v',['v/c','cv','c+v'],'n = speed in vacuum / speed in medium.',v));
+  add(v=>bankMCQ('Physics',ch,'Total internal reflection occurs when light travels:','from denser to rarer medium above critical angle',['from rarer to denser medium','at normal incidence','in vacuum only'],'Both conditions are required for total internal reflection.',v));
+  add(v=>bankMCQ('Physics',ch,'A concave mirror can form a real image when the object is:','beyond the focus',['between pole and focus only','at the pole only','behind the mirror'],'A concave mirror forms a real image for object distances beyond f.',v));
+ } else if(t.includes('wave optics')){
+  add(v=>{let D=2,d=1,lam=x(v);return bankMCQ('Physics',ch,`In YDSE, λ = ${lam} μm, D = 2 m and slit separation d = 1 mm. Fringe width in mm is:`,`${2*lam} mm`,[`${lam/2} mm`,`${lam} mm`,`${4*lam} mm`],'β = λD/d; with these units β = 2λ mm.',v)});
+  add(v=>bankMCQ('Physics',ch,'For constructive interference, path difference is:','nλ',['(n+1/2)λ','λ/4','(2n+1)λ/4'],'Constructive interference requires integral wavelength path difference.',v));
+  add(v=>bankMCQ('Physics',ch,'For destructive interference, path difference is:','(n+1/2)λ',['nλ','2nλ','nλ/2 only'],'Destructive interference occurs for half-integral wavelength difference.',v));
+  add(v=>bankMCQ('Physics',ch,'Polarization demonstrates the:','transverse nature of light',['longitudinal nature of light','particle mass of light','Doppler effect'],'Only transverse waves can be polarized.',v));
+  add(v=>bankMCQ('Physics',ch,'The central maximum in single-slit diffraction is:','twice as wide as each secondary maximum region between minima',['narrower than all others','exactly half as wide','absent'],'The central diffraction maximum extends between first minima on both sides.',v));
+ } else if(t.includes('dual nature')){
+  add(v=>{let f=x(v);return bankMCQ('Physics',ch,`If frequency of incident light is doubled (above threshold), the photon energy becomes:`,`2 times`,['half','four times','unchanged'],'Photon energy E = hν.',v)});
+  add(v=>bankMCQ('Physics',ch,'The de Broglie wavelength of a particle is:','h/p',['hp','p/h','hE'],'λ = h/p.',v));
+  add(v=>bankMCQ('Physics',ch,'In the photoelectric effect, stopping potential depends on:','maximum kinetic energy of emitted electrons',['intensity only','area of metal plate only','number of photons only'],'eV₀ = Kmax.',v));
+  add(v=>bankMCQ('Physics',ch,'For frequency below threshold frequency, photoelectric emission:','does not occur',['occurs at low intensity','occurs after long delay','has zero stopping potential but emits'],'Threshold frequency is the minimum frequency for emission.',v));
+  add(v=>bankMCQ('Physics',ch,'Increasing intensity at fixed frequency above threshold mainly increases:','photoelectric current',['maximum kinetic energy','stopping potential','work function'],'Intensity changes photon flux, not energy per photon.',v));
+ } else if(t.includes('atoms')){
+  add(v=>bankMCQ('Physics',ch,'In Bohr’s model, angular momentum of the electron is:','quantized',['continuous','always zero','independent of orbit'],'L = nh/(2π).',v));
+  add(v=>bankMCQ('Physics',ch,'The radius of the nth Bohr orbit is proportional to:','n²',['n','1/n','1/n²'],'For hydrogen-like atoms, rn ∝ n²/Z.',v));
+  add(v=>bankMCQ('Physics',ch,'The energy of the electron in the ground state of hydrogen is approximately:','−13.6 eV',['+13.6 eV','−3.4 eV','0 eV'],'Ground-state energy of hydrogen is −13.6 eV.',v));
+  add(v=>bankMCQ('Physics',ch,'Emission of a photon occurs when an electron:','moves from higher to lower energy level',['moves from lower to higher energy level','remains in same level','is at infinity only'],'Photon energy equals the energy-level difference.',v));
+  add(v=>bankMCQ('Physics',ch,'The Lyman series of hydrogen lies in the:','ultraviolet region',['visible region','infrared region','microwave region'],'Lyman transitions terminate at n = 1 and are ultraviolet.',v));
+ } else if(t.includes('nuclei')){
+  add(v=>bankMCQ('Physics',ch,'Nuclear binding energy is associated with:','mass defect',['atomic number only','electron affinity','chemical bonding'],'Binding energy = mass defect × c².',v));
+  add(v=>bankMCQ('Physics',ch,'The SI unit commonly used for nuclear energy at particle scale is:','MeV',['kWh','tesla','weber'],'Nuclear energy is commonly expressed in electronvolts, especially MeV.',v));
+  add(v=>bankMCQ('Physics',ch,'In β⁻ decay, a neutron changes into:','a proton, electron and antineutrino',['a proton and positron','two protons','an alpha particle'],'n → p + e⁻ + anti-ν.',v));
+  add(v=>bankMCQ('Physics',ch,'Nuclear fission involves:','splitting a heavy nucleus',['joining two light nuclei','emission of visible light only','electron capture only'],'Fission splits a heavy nucleus into lighter fragments.',v));
+  add(v=>bankMCQ('Physics',ch,'The binding energy per nucleon is generally highest near:','iron-group nuclei',['hydrogen','uranium','helium only'],'The binding-energy curve peaks near iron/nickel.',v));
+ } else if(t.includes('semiconductor')){
+  add(v=>bankMCQ('Physics',ch,'A p-n junction diode conducts strongly when it is:','forward biased',['reverse biased','unbiased','open circuited'],'Forward bias lowers the junction barrier.',v));
+  add(v=>bankMCQ('Physics',ch,'A Zener diode is commonly used as a:','voltage regulator',['rectifier only','photodetector','logic memory cell'],'Zener breakdown provides nearly constant voltage.',v));
+  add(v=>bankMCQ('Physics',ch,'The output of an AND gate is 1 when:','both inputs are 1',['either input is 1','both inputs are 0','inputs differ'],'AND requires all inputs high.',v));
+  add(v=>bankMCQ('Physics',ch,'A NOT gate has:','one input and one output',['two inputs','three inputs','no output'],'A NOT gate inverts one input.',v));
+  add(v=>bankMCQ('Physics',ch,'A solar cell converts:','light energy into electrical energy',['electrical energy into light only','heat into sound','magnetic energy into heat'],'Photovoltaic effect produces electrical output from light.',v));
+ } else if(t.includes('experimental')){
+  add(v=>bankMCQ('Physics',ch,'A vernier calipers is commonly used to measure:','internal/external dimensions and depth',['only temperature','only electric current','only mass'],'Vernier calipers measure length-related dimensions.',v));
+  add(v=>bankMCQ('Physics',ch,'A screw gauge is suitable for measuring:','small thickness or wire diameter',['room temperature','large distances','time interval'],'A micrometer screw gauge resolves small lengths.',v));
+  add(v=>bankMCQ('Physics',ch,'The slope of a displacement-time graph gives:','velocity',['acceleration','force','momentum'],'Gradient dx/dt is velocity.',v));
+  add(v=>bankMCQ('Physics',ch,'In a metre bridge experiment, the balance condition is based on:','Wheatstone bridge principle',['Coulomb’s law','Faraday’s law','Bernoulli’s principle'],'A metre bridge is a practical form of a Wheatstone bridge.',v));
+  add(v=>bankMCQ('Physics',ch,'The focal length of a convex lens can be estimated by:','parallax method',['only a spring balance','a metre bridge','a calorimeter'],'The syllabus includes focal-length measurement by parallax method.',v));
+ } else {
+  add(v=>bankMCQ('Physics',ch,`Which principle is most directly associated with ${ch}?`,'conservation laws and measurable physical relationships',['random variation without a model','violation of energy conservation','absence of units'],'Physical models are built around measurable quantities and conservation principles.',v));
+  add(v=>bankMCQ('Physics',ch,`A physical quantity in ${ch} is best reported with:`,`a numerical value and a unit`,['a number without a unit always','a unit without a value','a colour label'],'Measurements require both magnitude and unit.',v));
+  add(v=>bankMCQ('Physics',ch,`Which graph feature is commonly used to extract a rate in ${ch}?`,'the slope',['the page number','the plot colour','the title length'],'A gradient represents a rate of change.',v));
+  add(v=>bankMCQ('Physics',ch,`The dimensions of energy are:`,`[M L² T⁻²]`,['[M L T⁻¹]','[M L T⁻²]','[M T⁻²]'],'Energy has the dimensions of work = force × displacement.',v));
+  add(v=>bankMCQ('Physics',ch,`A model used in ${ch} should be checked using:`,`units, limiting cases and physical consistency`,['font size','page count','random guesses'],'Dimensional and physical checks catch errors in a model.',v));
+ }
+ return fs;
+}
+function C(ch){const t=ch.toLowerCase(),fs=[];const add=fn=>fs.push(fn),x=v=>v+2;
+ if(t.includes('basic concepts')){
+  add(v=>{let m=18*x(v);return bankMCQ('Chemistry',ch,`How many moles are present in ${m} g of water (M = 18 g mol⁻¹)?`,`${x(v)} mol`,[`${m} mol`,`0.5 mol`,`${x(v)*2} mol`],'n = mass/molar mass.',v)});
+  add(v=>{let n=x(v);return bankMCQ('Chemistry',ch,`Number of molecules in ${n} mol of a substance is:`,`${n}Nₐ`,['Nₐ/n','Nₐ','n²Nₐ'],'Number of particles = moles × Avogadro constant.',v)});
+  add(v=>bankMCQ('Chemistry',ch,'The empirical formula represents the:','simplest whole-number ratio of atoms',['actual number of atoms in one molecule','molecular mass only','percentage purity'],'Empirical formula gives the simplest atom ratio.',v));
+  add(v=>{let n=x(v);return bankMCQ('Chemistry',ch,`For 1 mol of H₂O, number of moles of hydrogen atoms is:`,`${2} mol`,['1 mol','3 mol','0.5 mol'],'Each water molecule contains two H atoms.',v)});
+  add(v=>bankMCQ('Chemistry',ch,'The limiting reagent is the reactant that:','is consumed first and limits product formation',['has the largest mass always','is present in excess','acts as a catalyst'],'The limiting reagent determines the maximum theoretical product.',v));
+ } else if(t.includes('atomic structure')){
+  add(v=>{let n=x(v);return bankMCQ('Chemistry',ch,`Maximum number of electrons in a shell with n = ${n} is:`,`${2*n*n}`,[`${n*n}`,`${2*n}`,`${4*n}`],'Maximum electrons in a shell = 2n².',v)});
+  add(v=>{let n=x(v);return bankMCQ('Chemistry',ch,`Number of orbitals in shell n = ${n} is:`,`${n*n}`,[`${2*n*n}`,`${2*n}`,`${n}`],'Total orbitals in a shell = n².',v)});
+  add(v=>bankMCQ('Chemistry',ch,'For a given principal quantum number n, the azimuthal quantum number l can take values:','0 to n−1',['1 to n','0 to n','−n to +n'],'Allowed l values are integers from 0 through n−1.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The maximum number of electrons in a p-subshell is:','6',['2','10','14'],'A p-subshell has 3 orbitals, each holding 2 electrons.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The Pauli exclusion principle states that no two electrons in an atom can have:','the same set of four quantum numbers',['the same spin','the same principal quantum number','opposite spins'],'At least one of the four quantum numbers must differ.',v));
+ } else if(t.includes('chemical bonding')){
+  add(v=>bankMCQ('Chemistry',ch,'The molecular shape of NH₃ is:','trigonal pyramidal',['trigonal planar','linear','tetrahedral'],'Three bond pairs and one lone pair give trigonal pyramidal geometry.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The hybridisation of carbon in methane is:','sp³',['sp²','sp','dsp²'],'Four equivalent sigma bonds correspond to sp³ hybridisation.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Which molecule has zero dipole moment despite polar bonds?','CO₂',['H₂O','NH₃','SO₂'],'Linear CO₂ has equal opposite bond dipoles.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Bond order of N₂ according to molecular orbital theory is:','3',['1','2','2.5'],'N₂ has bond order 3.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A sigma bond is formed by:','head-on overlap of orbitals',['sidewise overlap only','ionic attraction only','electron transfer'],'Sigma bonds have axial/head-on overlap.',v));
+ } else if(t.includes('thermodynamics')){
+  add(v=>{let q=50+10*v,w=-10;return bankMCQ('Chemistry',ch,`In chemistry sign convention, q = ${q} J and w = −10 J. ΔU is:`,`${q-10} J`,[`${q+10} J`,`10 J`,`${-q-10} J`],'First law: ΔU = q + w.',v)});
+  add(v=>bankMCQ('Chemistry',ch,'At constant pressure, heat exchanged is equal to change in:','enthalpy',['internal energy always','entropy only','Gibbs energy'],'qp = ΔH.',v));
+  add(v=>bankMCQ('Chemistry',ch,'For a spontaneous process at constant T and P, ΔG is:','negative',['positive','zero always','infinite'],'Spontaneity requires ΔG < 0.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Hess’s law is based on enthalpy being a:','state function',['path function','intensive variable only','catalyst'],'Enthalpy change depends only on initial and final states.',v));
+  add(v=>bankMCQ('Chemistry',ch,'For an ideal gas, the relation between ΔH and ΔU is:','ΔH = ΔU + Δn(g)RT',['ΔH = ΔU − RT always','ΔH = ΔU','ΔH = 0'],'For ideal-gas reactions, ΔH = ΔU + ΔngRT.',v));
+ } else if(t.includes('solutions')){
+  add(v=>{let n=x(v);return bankMCQ('Chemistry',ch,`Molarity of a solution containing ${n} mol solute in 2 L solution is:`,`${n/2} M`,[`${2*n} M`,`${n} M`,`${1/n} M`],'Molarity = moles of solute / volume in litres.',v)});
+  add(v=>bankMCQ('Chemistry',ch,'For an ideal solution, enthalpy of mixing is:','zero',['positive','negative','always infinite'],'Ideal solutions obey Raoult’s law and have ΔHmix = 0.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Relative lowering of vapour pressure for a dilute solution with non-volatile solute equals:','mole fraction of solute',['mole fraction of solvent','molarity','molality'],'Raoult’s law gives relative lowering equal to solute mole fraction.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The unit of molality is:','mol kg⁻¹',['mol L⁻¹','kg mol⁻¹','mol m⁻³'],'Molality is moles of solute per kilogram of solvent.',v));
+  add(v=>bankMCQ('Chemistry',ch,'For the same molality of a non-electrolyte, elevation in boiling point is:','directly proportional to molal elevation constant Kb',['inversely proportional to Kb','independent of molality','always zero'],'ΔTb = Kb m.',v));
+ } else if(t.includes('equilibrium')){
+  add(v=>bankMCQ('Chemistry',ch,'For aA + bB ⇌ cC + dD, Kc is written as:','[C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ',['[A]ᵃ[B]ᵇ/[C]ᶜ[D]ᵈ','[C+D]/[A+B]','[A][B][C][D]'],'Products over reactants with stoichiometric powers.',v));
+  add(v=>bankMCQ('Chemistry',ch,'For an exothermic equilibrium, increasing temperature shifts equilibrium towards:','reactants',['products','no side','both equally'],'Heat acts as a product in an exothermic reaction.',v));
+  add(v=>bankMCQ('Chemistry',ch,'At 25°C, pH of a neutral aqueous solution is:','7',['0','1','14'],'For neutral water at 25°C, [H⁺] = 10⁻⁷ M.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A buffer solution resists changes in:','pH',['temperature only','volume only','colour only'],'Buffers contain a conjugate acid-base pair.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The common-ion effect generally:','suppresses ionisation of a weak electrolyte',['increases its ionisation','has no influence','changes atomic number'],'Adding a common ion shifts the equilibrium to reduce ionisation.',v));
+ } else if(t.includes('redox')||t.includes('electrochemistry')){
+  add(v=>bankMCQ('Chemistry',ch,'Oxidation is defined as:','loss of electrons',['gain of electrons','loss of protons only','gain of neutrons'],'Oxidation involves loss of electrons.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The oxidation number of Cr in K₂Cr₂O₇ is:','+6',['+3','+4','+7'],'2(+1)+2x+7(−2)=0 gives x=+6.',v));
+  add(v=>bankMCQ('Chemistry',ch,'In a galvanic cell, oxidation occurs at the:','anode',['cathode','salt bridge','electrolyte only'],'The anode is the site of oxidation in all electrochemical cells.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The relation between standard Gibbs energy and cell potential is:','ΔG° = −nFE°cell',['ΔG° = nFE°cell','ΔG° = E°/nF','ΔG° = 0 always'],'Electrical work gives ΔG° = −nFE°.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Molar conductivity generally increases on dilution for:','electrolytes',['metals in solid state','non-conducting solids','all gases'],'Ionic mobility/degree of dissociation causes this trend.',v));
+ } else if(t.includes('chemical kinetics')){
+  add(v=>bankMCQ('Chemistry',ch,'The unit of first-order rate constant is:','s⁻¹',['mol L⁻¹ s⁻¹','L mol⁻¹ s⁻¹','mol² L⁻² s⁻¹'],'For first order, k has dimension time⁻¹.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Half-life of a first-order reaction is:','independent of initial concentration',['directly proportional to initial concentration','inversely proportional to initial concentration','always zero'],'t½ = 0.693/k.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The order of a reaction is determined experimentally from:','rate law',['balanced equation coefficients always','molar mass','temperature alone'],'Order is the sum of powers in the experimentally determined rate law.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A catalyst changes the reaction rate by changing:','activation energy pathway',['equilibrium constant','standard enthalpy','overall Gibbs energy difference'],'Catalysts provide an alternate lower activation-energy pathway.',v));
+  add(v=>bankMCQ('Chemistry',ch,'For a zero-order reaction, rate is:','independent of reactant concentration',['proportional to concentration','proportional to square concentration','inversely proportional to concentration'],'Rate = k for zero order.',v));
+ } else if(t.includes('periodic table')){
+  add(v=>bankMCQ('Chemistry',ch,'Across a period from left to right, atomic radius generally:','decreases',['increases','remains constant','first doubles'],'Effective nuclear charge generally increases across a period.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Down a group, atomic radius generally:','increases',['decreases','remains constant','becomes zero'],'New electron shells are added down a group.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The most electronegative element is:','fluorine',['oxygen','chlorine','nitrogen'],'Fluorine has the highest Pauling electronegativity.',v));
+  add(v=>bankMCQ('Chemistry',ch,'First ionisation enthalpy is the energy required to:','remove the most loosely bound electron from an isolated gaseous atom',['add an electron to an anion','remove a neutron','break a molecule'],'This is the definition of first ionisation enthalpy.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The modern periodic law is based on atomic:','number',['mass','volume','density'],'Properties are periodic functions of atomic number.',v));
+ } else if(t.includes('p-block')){
+  add(v=>bankMCQ('Chemistry',ch,'The first element of a group often shows anomalous behaviour mainly due to:','small size and high charge density',['largest atomic radius','lowest electronegativity','absence of valence electrons'],'Small size, high electronegativity and no d orbitals contribute.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The general valence-shell configuration of group 17 elements is:','ns²np⁵',['ns²np¹','ns²np³','ns²np⁶'],'Halogens have seven valence electrons.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The most common oxidation state of group 18 elements is:','0',['+1','−1','+2'],'Noble gases have closed valence shells and are mostly inert.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The acidic character of group 16 hydrides generally:','increases down the group',['decreases down the group','remains constant','becomes zero'],'H–E bond strength decreases down the group.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The inert pair effect becomes more prominent:','down a group in heavier p-block elements',['up a group','only in period 2','only in alkali metals'],'The ns² pair is less readily involved in bonding in heavier elements.',v));
+ } else if(t.includes('d- and f-block')){
+  add(v=>bankMCQ('Chemistry',ch,'Transition-metal ions are often coloured due to:','d–d electronic transitions',['s–s transitions only','nuclear transitions','complete absence of d orbitals'],'Partially filled d orbitals allow d–d transitions.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Lanthanoid contraction is mainly due to:','poor shielding by 4f electrons',['strong shielding by 4f electrons','increase in principal shell','loss of all valence electrons'],'4f electrons shield nuclear charge poorly.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Many transition metals act as good catalysts because of:','variable oxidation states and surface adsorption',['fixed oxidation state only','very low melting point only','absence of d electrons'],'Variable valency and adsorption help catalytic cycles.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The common oxidation state of lanthanoids is:','+3',['−3','+7','0'],'The +3 state is most common for lanthanoids.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A substance with unpaired electrons is generally:','paramagnetic',['diamagnetic','non-magnetic always','superconducting'],'Unpaired electrons produce a net magnetic moment.',v));
+ } else if(t.includes('coordination')){
+  add(v=>bankMCQ('Chemistry',ch,'The coordination number of Co in [Co(NH₃)₆]Cl₃ is:','6',['3','4','8'],'Six monodentate NH₃ ligands are directly bonded to Co.',v));
+  add(v=>bankMCQ('Chemistry',ch,'NH₃ acts as a:','neutral monodentate ligand',['negative bidentate ligand','positive tridentate ligand','neutral hexadentate ligand'],'NH₃ donates one lone pair and has zero charge.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Oxidation state of Co in [Co(NH₃)₆]Cl₃ is:','+3',['+1','+2','+6'],'The complex cation has charge +3; NH₃ is neutral.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A chelating ligand attaches to a metal through:','two or more donor atoms',['one donor atom only','no donor atom','only hydrogen bonds'],'Chelating ligands form ring structures with a metal centre.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The geometry commonly associated with coordination number 6 is:','octahedral',['tetrahedral','linear','trigonal planar'],'Six-coordinate complexes commonly adopt octahedral geometry.',v));
+ } else if(t.includes('purification')){
+  add(v=>bankMCQ('Chemistry',ch,'The principle of chromatography is differential:','adsorption or partition between phases',['nuclear decay','electrical conduction','crystal lattice energy'],'Components distribute differently between stationary and mobile phases.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Recrystallisation is mainly used to:','purify a solid based on solubility difference',['separate gases by density','measure pH','identify metal ions only'],'Impurities remain in solution or are removed by filtration.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Lassaigne’s test is used to detect extra elements such as:','nitrogen, sulphur and halogens',['carbon and hydrogen only','oxygen only','metals only'],'Sodium fusion converts covalently bonded extra elements into ionic salts.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The Rf value in chromatography is:','distance moved by solute / distance moved by solvent front',['distance solvent / distance solute','mass / volume','time / distance'],'Rf is a ratio of travel distances.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Fractional distillation separates liquids mainly by difference in:','boiling points',['colour','magnetic properties','molecular shape only'],'Repeated vaporisation-condensation enriches the more volatile component.',v));
+ } else if(t.includes('basic principles of organic')){
+  add(v=>bankMCQ('Chemistry',ch,'A carbocation is generally stabilised by:','resonance and hyperconjugation',['strong electron withdrawal only','absence of alkyl groups','highly localised positive charge'],'Electron donation disperses positive charge.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Homolytic bond cleavage produces:','free radicals',['a cation and an anion','two protons','two molecules with no electrons'],'Each atom takes one electron from the bond pair.',v));
+  add(v=>bankMCQ('Chemistry',ch,'An electrophile is a species that:','accepts an electron pair',['donates an electron pair','donates a proton only','accepts a neutron'],'Electrophiles are electron-pair acceptors.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The inductive effect is transmitted through:','sigma bonds',['pi bonds only','space only','hydrogen bonds only'],'Inductive effect is a permanent polarisation through sigma bonds.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The hybridisation of carbon in ethene is:','sp²',['sp³','sp','dsp²'],'Each alkene carbon has trigonal planar geometry and sp² hybridisation.',v));
+ } else if(t.includes('hydrocarbon')){
+  add(v=>bankMCQ('Chemistry',ch,'Addition of HBr to propene in the absence of peroxide mainly gives:','2-bromopropane',['1-bromopropane','1,2-dibromopropane','propane'],'Markovnikov addition places Br at the more substituted carbon.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Benzene is unusually stable because it is:','aromatic with delocalised π electrons',['a cycloalkane','non-planar with isolated bonds','a saturated ring'],'Six π electrons are delocalised over the ring.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Ozonolysis of an alkene is useful for determining:','position of the carbon-carbon double bond',['molecular mass only','boiling point only','number of sigma bonds only'],'Cleavage products reveal the location of C=C.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The most stable conformation of ethane is:','staggered',['eclipsed','planar eclipsed','fully twisted'],'Staggered conformation minimises torsional strain.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Terminal alkynes are weakly acidic due to:','sp-hybridised carbon having high s-character',['sp³ carbon','absence of π bonds','strong +I effect'],'Higher s-character stabilises the conjugate base.',v));
+ } else if(t.includes('halogens')){
+  add(v=>bankMCQ('Chemistry',ch,'SN1 reactions are favoured by formation of a stable:','carbocation',['carbanion','free hydride','alkyne'],'SN1 proceeds through a carbocation intermediate.',v));
+  add(v=>bankMCQ('Chemistry',ch,'SN2 reactions proceed through:','one-step backside attack',['two-step carbocation formation','free-radical chain only','electrophilic aromatic substitution'],'SN2 is concerted with backside nucleophilic attack.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The C–X bond in alkyl halides is polar because:','halogen is more electronegative than carbon',['carbon is more electronegative','both have identical electronegativity','the bond is purely ionic in every case'],'Electron density is pulled towards the halogen.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A primary alkyl halide generally favours which substitution pathway with a strong nucleophile?','SN2',['SN1 only','neither','free-radical substitution only'],'Primary carbocations are unstable; backside displacement is favoured.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Iodoform is recognised by its:','pale yellow precipitate',['blue solution','red gas','black crystalline solid'],'CHI₃ forms a characteristic yellow precipitate.',v));
+ } else if(t.includes('containing oxygen')){
+  add(v=>bankMCQ('Chemistry',ch,'Tollens’ reagent is commonly used to distinguish:','aldehydes from most ketones',['alcohols from ethers','alkanes from alkenes','phenols from acids'],'Aldehydes generally reduce Tollens’ reagent to silver.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Phenol is more acidic than ethanol because phenoxide ion is:','resonance stabilised',['destabilised by resonance','a carbocation','unable to delocalise charge'],'The negative charge is delocalised over the aromatic ring.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Oxidation of a primary alcohol under suitable conditions can produce:','an aldehyde and then a carboxylic acid',['a tertiary alcohol only','an ether only','an alkane directly'],'Primary alcohols oxidise first to aldehydes and further to acids.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Aldol condensation requires a carbonyl compound with:','at least one α-hydrogen',['no hydrogen atoms','only an aromatic ring','a halogen atom'],'Enolate formation requires an alpha hydrogen.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The carbonyl carbon in aldehydes and ketones is:','electrophilic',['nucleophilic','negatively charged always','non-polar'],'C=O is polarised towards oxygen, leaving carbon δ+.',v));
+ } else if(t.includes('containing nitrogen')){
+  add(v=>bankMCQ('Chemistry',ch,'Amines are basic because nitrogen has:','a lone pair of electrons',['a vacant d orbital only','a positive charge always','no valence electrons'],'The lone pair can accept a proton.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Aniline is less basic than ammonia mainly due to:','delocalisation of the nitrogen lone pair into the ring',['greater availability of the lone pair','absence of a lone pair','stronger +I effect'],'Resonance reduces lone-pair availability.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Diazonium salts are especially useful in:','synthetic transformations of aromatic compounds',['alkane combustion','polymer cracking only','neutralisation only'],'Aryl diazonium salts are versatile intermediates.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The functional group of primary amines is:','−NH₂',['−NO₂','−CN only','−CONH₂'],'Primary amines have one carbon substituent on nitrogen.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The carbylamine test is given by:','primary amines',['all tertiary amines','all amides','all nitro compounds'],'Primary amines form foul-smelling isocyanides.',v));
+ } else if(t.includes('biomolecules')){
+  add(v=>bankMCQ('Chemistry',ch,'The linkage joining amino acids in proteins is:','peptide bond',['glycosidic bond','phosphodiester bond','ionic bond only'],'A peptide bond is an amide linkage.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The monomeric units of proteins are:','α-amino acids',['monosaccharides','nucleotides','fatty acids'],'Proteins are polypeptides of amino acids.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The sugar present in RNA is:','ribose',['deoxyribose','glucose','fructose'],'RNA contains ribose; DNA contains deoxyribose.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Sucrose is a:','non-reducing disaccharide',['reducing monosaccharide','polysaccharide','amino acid'],'Both anomeric centres are involved in the glycosidic bond.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Enzymes are biological:','catalysts',['inhibitors only','structural lipids','nucleic acid bases'],'Most enzymes are proteins that catalyse reactions.',v));
+ } else if(t.includes('practical')){
+  add(v=>bankMCQ('Chemistry',ch,'Mohr’s salt is a double salt containing:','Fe²⁺',['Fe³⁺ only','Cu²⁺ only','Ag⁺ only'],'Mohr’s salt is ferrous ammonium sulfate.',v));
+  add(v=>bankMCQ('Chemistry',ch,'In acidified KMnO₄ titration, KMnO₄ often acts as:','self-indicator',['external starch indicator','buffer','precipitating agent only'],'The purple permanganate colour indicates the endpoint.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A carbonate ion with dilute acid generally gives:','CO₂ gas',['H₂ gas','NH₃ gas','Cl₂ gas'],'Carbonate + acid releases carbon dioxide.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A violet flame in a flame test is commonly associated with:','potassium',['sodium','calcium','barium'],'Potassium gives a lilac/violet flame.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The purpose of an indicator in acid-base titration is to signal:','the endpoint by a colour change',['the mass of solute','the density of the acid','the rate constant'],'Indicators change colour over a pH range.',v));
+ } else {
+  add(v=>bankMCQ('Chemistry',ch,`Which statement best describes a key idea in ${ch}?`,'chemical behaviour is explained by structure and interactions',['properties are unrelated to composition','all compounds react identically','chemical changes violate atom conservation'],'Chemical properties follow from composition, structure and interactions.',v));
+  add(v=>bankMCQ('Chemistry',ch,'The mole is the SI unit for:','amount of substance',['mass','temperature','luminous intensity'],'Mole is the SI base unit for amount of substance.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A catalyst changes the rate of a reaction but does not change its:','equilibrium constant at fixed temperature',['activation energy','reaction pathway','rate at every concentration'],'A catalyst changes kinetics, not thermodynamic equilibrium.',v));
+  add(v=>bankMCQ('Chemistry',ch,'A balanced chemical equation obeys conservation of:','atoms of each element',['volume only','temperature only','colour'],'Atoms are conserved in an ordinary chemical reaction.',v));
+  add(v=>bankMCQ('Chemistry',ch,'Oxidation state is a formal tool to track:','electron accounting',['molecular shape only','boiling point only','density only'],'Oxidation numbers help track electron transfer.',v));
+ }
+ return fs;
+}
+function M(ch){const t=ch.toLowerCase(),fs=[],add=f=>fs.push(f),x=v=>v+2;
+ if(t.includes('sets, relations')){
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`If |A| = ${n} and |B| = ${n+1}, with A∩B = ∅, then |A∪B| is:`,`${2*n+1}`,[`${n+1}`,`${n}`,`${n*n}`],'For disjoint sets, |A∪B| = |A|+|B|.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The number of subsets of a set with n elements is:','2ⁿ',['n²','n!','2n'],'Each element is either included or excluded.',v));
+  add(v=>bankMCQ('Mathematics',ch,'A relation that is reflexive, symmetric and transitive is called:','an equivalence relation',['a function only','an antisymmetric relation only','a bijection'],'These three properties define equivalence relations.',v));
+  add(v=>bankMCQ('Mathematics',ch,'A function that is both one-one and onto is:','bijective',['constant','many-one only','into but not onto'],'Bijective means injective and surjective.',v));
+  add(v=>bankMCQ('Mathematics',ch,'If f(x)=2x+1 and g(x)=x², then (g∘f)(x) is:','(2x+1)²',['2x²+1','x²+2x+1','2x+2'],'Composition means g(f(x)).',v));
+ } else if(t.includes('complex')){
+  add(v=>{let a=x(v),b=2*x(v);return bankMCQ('Mathematics',ch,`The modulus of ${a} + ${b}i is:`,`${Math.sqrt(a*a+b*b)}`,[`${a+b}`,`${b-a}`,`${a*a+b*b}`],'|a+ib| = √(a²+b²).',v)});
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`The sum of roots of x² − ${n}x + ${n+1} = 0 is:`,`${n}`,[`${n+1}`,`${-n}`,`1/${n}`],'For ax²+bx+c, sum of roots = −b/a.',v)});
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`The product of roots of x² + ${n}x + ${n+1} = 0 is:`,`${n+1}`,[`${n}`,`${-n}`,`${1}`],'Product of roots = c/a.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The value of i⁴ is:','1',['−1','i','−i'],'Powers of i repeat every four.',v));
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`The discriminant of x² − 2${n}x + ${n*n} = 0 is:`,`0`,[`${n}`,`${4*n}`,`${-4*n}`],'D = b²−4ac = 0 for a repeated root.',v)});
+ } else if(t.includes('matrices')){
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`If A is ${n}×3 and B is 3×2, the order of AB is:`,`${n}×2`,[`3×${n}`,'2×3',`${n}×3`],'The product has the outer dimensions.',v)});
+  add(v=>{let a=x(v),b=x(v)+1;return bankMCQ('Mathematics',ch,`The determinant of [[${a},0],[0,${b}]] is:`,`${a*b}`,[`${a+b}`,`${a-b}`,`${a*b+1}`],'For a diagonal 2×2 matrix, determinant is product of diagonal entries.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'A square matrix A is invertible if and only if:','det(A) ≠ 0',['det(A)=0','A is a zero matrix','A is rectangular'],'A non-zero determinant is necessary and sufficient for inverse.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For compatible matrices, (AB)ᵀ equals:','BᵀAᵀ',['AᵀBᵀ','ABᵀ','AᵀB'],'Transpose reverses the order of a product.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The identity matrix I satisfies:','AI = IA = A',['AI = 0','AI = I always','AI = A²'],'Identity is the multiplicative identity for square matrices.',v));
+ } else if(t.includes('determinants')){
+  add(v=>{let a=x(v),b=x(v)+1;return bankMCQ('Mathematics',ch,`Evaluate |${a} 0; 0 ${b}|:`,`${a*b}`,[`${a+b}`,`${a-b}`,`${a*b+1}`],'For a diagonal determinant, multiply diagonal entries.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'If two rows of a determinant are interchanged, its value:','changes sign',['remains same','becomes zero always','is squared'],'Interchanging two rows multiplies determinant by −1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'If one row of a determinant is multiplied by k, determinant is:','multiplied by k',['divided by k','unchanged','multiplied by k²'],'A determinant is linear in each row.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The area of a triangle with collinear vertices is:','zero',['one','infinite','negative'],'Collinearity gives zero determinant area.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For a square matrix A, det(A⁻¹) equals:','1/det(A)',['det(A)','−det(A)','det(A)²'],'det(AA⁻¹)=det(I)=1.',v));
+ } else if(t.includes('permutations')){
+  add(v=>{let n=x(v)+2;return bankMCQ('Mathematics',ch,`Number of arrangements of ${n} distinct objects in a row is:`,`${[1,1,2,6,24,120,720,5040,40320,362880][n-1]||'n!'}`,[`${n*n}`,`${n*(n-1)}`,`${n+1}`],'Number of permutations of n distinct objects is n!.',v)});
+  add(v=>{let n=6+v,r=2;return bankMCQ('Mathematics',ch,`Number of ways to choose 2 objects from ${n} distinct objects is:`,`${n*(n-1)/2}`,[`${n*(n-1)}`,`${n*n}`,`${n+2}`],'Combination = n(n−1)/2.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The number of circular arrangements of n distinct objects is:','(n−1)!',['n!','n!/2','n²'],'Fix one object to remove rotations.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The number of ways to arrange n distinct objects when two specified objects are together is:','2(n−1)!',['(n−2)!','n!','2n!'],'Treat the pair as one block and permute it internally.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The number of ways to choose r objects from n distinct objects is:','nCr',['nPr','r!','n!r!'],'Combination ignores order.',v));
+ } else if(t.includes('binomial')){
+  add(v=>{let n=4+v,r=2;return bankMCQ('Mathematics',ch,`Coefficient of x² in (1+x)^${n} is:`,`${n*(n-1)/2}`,[`${n}`,`${n*n}`,`${n*(n+1)/2}`],'The coefficient is nC2.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The general term in (a+b)ⁿ is:','Tᵣ₊₁ = nCr aⁿ⁻ʳbʳ',['Tᵣ = nPr aʳbⁿ','Tᵣ₊₁ = n!a!b!','Tᵣ = aⁿ+bⁿ'],'General term follows from binomial expansion.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For n even, the number of terms in (a+b)ⁿ is:','n+1',['n','n−1','2n'],'There are n+1 terms in any positive integral binomial expansion.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The sum of all binomial coefficients in (1+x)ⁿ is:','2ⁿ',['n²','n!','0'],'Set x=1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The middle term of (a+b)ⁿ for n even is:','Tₙ/₂₊₁',['T₁','Tₙ','Tₙ₊₁'],'There is one middle term when n is even.',v));
+ } else if(t.includes('sequences')){
+  add(v=>{let a=x(v),d=3,n=5;return bankMCQ('Mathematics',ch,`The 5th term of an AP with first term ${a} and common difference 3 is:`,`${a+12}`,[`${a+15}`,`${a+9}`,`${a+3}`],'aₙ = a+(n−1)d.',v)});
+  add(v=>{let a=x(v),d=2,n=5;return bankMCQ('Mathematics',ch,`Sum of first 5 terms of an AP with a=${a}, d=2 is:`,`${5*(2*a+8)/2}`,[`${5*(2*a+10)/2}`,`${a+8}`,`${5*a}`],'Sn = n/2[2a+(n−1)d].',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The nth term of a GP with first term a and common ratio r is:','arⁿ⁻¹',['a+(n−1)r','aⁿr','a/rⁿ'],'GP term formula.',v));
+  add(v=>bankMCQ('Mathematics',ch,'If a, G, b are in continued proportion, then:','G² = ab',['G=a+b','G²=a+b','G=ab'],'Geometric mean squared equals product.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The sum of an infinite GP exists when:','|r| < 1',['|r| > 1','r = 1','r is any real number'],'An infinite geometric series converges if |r| < 1.',v));
+ } else if(t.includes('limits')){
+  add(v=>{let a=x(v);return bankMCQ('Mathematics',ch,`lim(x→0) sin(${a}x)/x equals:`,`${a}`,[`1`,`${1/a}`,`${a*a}`],'Use sin(ax)/x = a·sin(ax)/(ax).',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The derivative of ln x for x>0 is:','1/x',['x','ln x','eˣ'],'Standard derivative.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The derivative of xⁿ with respect to x is:','nxⁿ⁻¹',['xⁿ⁺¹/(n+1)','nxⁿ','n xⁿ⁺¹'],'Power rule.',v));
+  add(v=>bankMCQ('Mathematics',ch,'A function is continuous at x=a if:','left limit = right limit = f(a)',['only f(a) exists','only left limit exists','derivative is zero'],'Continuity requires the common limit to equal the function value.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The derivative of sin x is:','cos x',['−cos x','sin x','−sin x'],'Standard trigonometric derivative.',v));
+ } else if(t.includes('applications of derivatives')){
+  add(v=>{let a=x(v);return bankMCQ('Mathematics',ch,`The stationary point of y = x² − ${2*a}x + ${a*a+1} occurs at x =:`,`${a}`,[`${2*a}`,`${-a}`,`0`],'Differentiate: dy/dx = 2x−2a = 0.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'If f′(x)>0 throughout an interval, f is:','increasing on that interval',['decreasing','constant','discontinuous'],'Positive derivative implies increasing function.',v));
+  add(v=>bankMCQ('Mathematics',ch,'At a local maximum of a differentiable function, typically:','f′ changes from positive to negative',['f′ changes from negative to positive','f″ is always positive','f′ is always positive'],'A maximum has rising then falling behaviour.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The rate of change of y with respect to x is represented by:','dy/dx',['∫y dx','y/x always','dx/dy²'],'Derivative gives instantaneous rate of change.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For a local minimum, the second derivative test gives:','f″(a)>0',['f″(a)<0','f″(a)=0 always','f′(a)>0'],'Positive second derivative indicates concavity up at a stationary point.',v));
+ } else if(t.includes('integral')){
+  add(v=>{let n=x(v);return bankMCQ('Mathematics',ch,`∫ ${n}x⁽${n-1}⁾ dx equals:`,`x⁽${n}⁾ + C`,[`x⁽${n+1}⁾ + C`,`x⁽${n-1}⁾ + C`,`${n}x⁽${n}⁾ + C`],'Reverse power rule.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'∫ cos x dx equals:','sin x + C',['−sin x + C','cos x + C','−cos x + C'],'Antiderivative of cos x is sin x.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The definite integral ∫₀¹ 2x dx equals:','1',['0','2','4'],'Evaluate [x²] from 0 to 1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'Integration by parts is based on:','∫u dv = uv − ∫v du',['∫u dv = u+v','∫u dv = uv+∫v du','∫u dv = du/dv'],'This is the standard integration-by-parts identity.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The integral of 1/x for x>0 is:','ln x + C',['x²/2 + C','eˣ + C','1/x² + C'],'Standard logarithmic integral.',v));
+ } else if(t.includes('differential equations')){
+  add(v=>bankMCQ('Mathematics',ch,'The order of d²y/dx² + 3dy/dx + y = 0 is:','2',['1','3','0'],'The highest derivative is second order.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The general solution of dy/dx = 2x is:','y = x² + C',['y = 2x + C','y = x + C','y = 2x² + C'],'Integrate both sides with respect to x.',v));
+  add(v=>bankMCQ('Mathematics',ch,'A differential equation is separable if it can be written as:','g(y)dy = f(x)dx',['y+x=0 only','dy/dx=constant always','xdy=ydx only'],'Variables can be separated onto opposite sides.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The degree of a differential equation is defined when it is polynomial in derivatives and is the:','power of the highest-order derivative',['number of variables','order plus one','coefficient of y'],'Degree is the exponent of the highest-order derivative after clearing radicals/fractions.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The solution of dy/dx = ky is:','y = Ceᵏˣ',['y = kx+C','y = Cxᵏ','y = eˣ+k'],'Separate variables and integrate.',v));
+ } else if(t.includes('straight lines')){
+  add(v=>{let a=x(v);return bankMCQ('Mathematics',ch,`The slope of 2x + ${a}y − 4 = 0 is:`,`−2/${a}`,[`${a}/2`,`2/${a}`,`−${a}/2`],'For Ax+By+C=0, slope = −A/B.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The slope of a line perpendicular to a line of slope m (m≠0) is:','−1/m',['m','1/m','−m'],'Perpendicular slopes have product −1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'Distance from point (x₁,y₁) to Ax+By+C=0 is:','|Ax₁+By₁+C|/√(A²+B²)',['|Ax₁+By₁|','√(A²+B²)','|C|/AB'],'Point-line distance formula.',v));
+  add(v=>bankMCQ('Mathematics',ch,'Two lines are parallel when their slopes are:','equal',['negative reciprocals','opposite','both zero only'],'Parallel non-vertical lines have equal slopes.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The line with x-intercept a and y-intercept b is:','x/a + y/b = 1',['ax+by=1','x+y=ab','x/a − y/b = 0'],'Intercept form of a straight line.',v));
+ } else if(t.includes('circles')){
+  add(v=>{let r=x(v);return bankMCQ('Mathematics',ch,`The radius of x²+y²=${r*r} is:`,`${r}`,[`${r*r}`,`${2*r}`,`${r/2}`],'x²+y²=r² is a circle centred at origin.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'The general equation of a circle is:','x²+y²+2gx+2fy+c=0',['x²−y²+2gx=0','y=mx+c','x²+y²+z²=0'],'This is the standard general circle equation.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The centre of x²+y²+2gx+2fy+c=0 is:','(−g,−f)',['(g,f)','(2g,2f)','(−2g,−2f)'],'Complete squares to read the centre.',v));
+  add(v=>bankMCQ('Mathematics',ch,'A tangent to a circle is perpendicular to the:','radius at the point of contact',['diameter always','x-axis always','chord always'],'The radius to the contact point is normal to the tangent.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The equation of a circle with centre (h,k) and radius r is:','(x−h)²+(y−k)²=r²',['(x+h)²+(y+k)²=r','x²+y²=r','(x−h)+(y−k)=r²'],'Standard centre-radius form.',v));
+ } else if(t.includes('conic')){
+  add(v=>bankMCQ('Mathematics',ch,'The eccentricity of a parabola is:','1',['0','less than 1','greater than 1'],'A parabola has eccentricity exactly one.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The eccentricity of an ellipse is:','less than 1',['equal to 1','greater than 1','zero always'],'An ellipse has 0≤e<1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The eccentricity of a hyperbola is:','greater than 1',['less than 1','equal to 1','zero'],'A hyperbola has e>1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For y²=4ax, the focus is:','(a,0)',['(0,a)','(−a,0)','(0,−a)'],'Standard right-opening parabola.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The directrix of y²=4ax is:','x=−a',['x=a','y=−a','y=a'],'Standard right-opening parabola directrix.',v));
+ } else if(t.includes('three-dimensional')){
+  add(v=>{let d=x(v);return bankMCQ('Mathematics',ch,`Distance between (0,0,0) and (0,0,${d}) is:`,`${d}`,[`${d*d}`,`${2*d}`,`${d/2}`],'Use 3D distance formula.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'For direction cosines l,m,n of a line:','l²+m²+n²=1',['l+m+n=1','lmn=1','l²+m²=n²'],'Direction cosines satisfy the unit-sphere identity.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The shortest distance between two skew lines is measured along a line:','perpendicular to both lines',['parallel to both','on either line','at 45° to both'],'The common perpendicular gives the shortest separation.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The direction ratios of a line parallel to vector ai+bj+ck are:','a,b,c',['1,1,1','a²,b²,c²','−a,−b,−c only'],'Direction ratios are proportional to vector components.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The distance formula in 3D between two points uses:','square root of sum of three squared coordinate differences',['sum of coordinate differences','product of coordinates','only x-coordinate difference'],'Apply the 3D Pythagorean theorem.',v));
+ } else if(t.includes('vector algebra')){
+  add(v=>{let k=x(v);return bankMCQ('Mathematics',ch,`The magnitude of vector ${k}i + ${0}j + ${0}k̂ is:`,`${k}`,[`${k*k}`,`${2*k}`,`${0}`],'Magnitude is the square root of sum of component squares.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'If two non-zero vectors have zero dot product, the angle between them is:','90°',['0°','45°','180°'],'A·B = |A||B|cosθ = 0.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The magnitude of A×B is:','|A||B|sinθ',['|A||B|cosθ','A+B','A·B'],'Cross product magnitude uses sine of angle.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The scalar product of two vectors is a:','scalar',['vector','matrix','tensor of rank 2'],'Dot product returns a scalar.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The vector product A×B is perpendicular to:','both A and B',['A only','B only','neither'],'Cross product is perpendicular to the plane containing A and B.',v));
+ } else if(t.includes('statistics')){
+  add(v=>{let a=x(v);return bankMCQ('Mathematics',ch,`The mean of ${a}, ${a+2}, ${a+4} is:`,`${a+2}`,[`${a+1}`,`${a+3}`,`${a+4}`],'Mean is the sum divided by the number of observations.',v)});
+  add(v=>bankMCQ('Mathematics',ch,'Variance is the mean of:','squared deviations from the mean',['absolute values only','deviations without squaring','cumulative frequencies'],'Variance measures average squared spread around the mean.',v));
+  add(v=>bankMCQ('Mathematics',ch,'Standard deviation is:','square root of variance',['square of variance','mean divided by variance','variance plus mean'],'Standard deviation is expressed in original units.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For a symmetric unimodal distribution, mean, median and mode are:','equal',['all different','mean twice median','mode zero'],'They coincide for a symmetric unimodal distribution.',v));
+  add(v=>bankMCQ('Mathematics',ch,'Adding the same constant to every observation changes the mean by that constant and leaves variance:','unchanged',['doubled','halved','zero'],'Translation does not change spread.',v));
+ } else if(t.includes('probability')){
+  add(v=>bankMCQ('Mathematics',ch,'For a fair die, probability of getting an even number is:','1/2',['1/3','1/6','2/3'],'Three even outcomes among six.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For two fair coins, probability of exactly one head is:','1/2',['1/4','3/4','1'],'Favourable outcomes HT and TH out of four.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For mutually exclusive events A and B:','P(A∪B)=P(A)+P(B)',['P(A∩B)=P(A)+P(B)','P(A)=P(B)','P(A∪B)=P(A)P(B)'],'No overlap means probabilities add.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For independent events A and B:','P(A∩B)=P(A)P(B)',['P(A∪B)=P(A)P(B)','P(A|B)=0','P(A)=1−P(B)'],'Independence makes the joint probability a product.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The sum of probabilities of all outcomes in a sample space is:','1',['0','1/2','depends on number of outcomes'],'A probability distribution totals one.',v));
+ } else if(t.includes('trigonometry')){
+  add(v=>bankMCQ('Mathematics',ch,'The identity 1 + tan²θ equals:','sec²θ',['cosec²θ','sin²θ','cos²θ'],'Pythagorean trigonometric identity.',v));
+  add(v=>bankMCQ('Mathematics',ch,'sin(π/2) equals:','1',['0','−1','1/2'],'Standard trigonometric value.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The principal value range of sin⁻¹x is:','[−π/2, π/2]',['[0,π]','[−π,π]','[0,2π]'],'Arcsine principal values lie in this interval.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The period of tan x is:','π',['2π','π/2','4π'],'tan(x+π)=tan x.',v));
+  add(v=>bankMCQ('Mathematics',ch,'cos(A+B) equals:','cosA cosB − sinA sinB',['cosA cosB + sinA sinB','sinA cosB + cosA sinB','sinA sinB − cosA cosB'],'Cosine addition formula.',v));
+ } else {
+  add(v=>bankMCQ('Mathematics',ch,`Which is a valid strategy for solving problems in ${ch}?`,'define the variables and apply the relevant theorem or formula',['ignore the conditions','change signs arbitrarily','assume the result'],'A mathematical solution must follow definitions and valid transformations.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The derivative of a constant is:','zero',['one','the constant itself','undefined'],'The slope of a constant function is zero.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The value of 0! is:','1',['0','undefined','−1'],'By definition and factorial recurrence, 0! = 1.',v));
+  add(v=>bankMCQ('Mathematics',ch,'For a non-zero real number a, a⁰ equals:','1',['0','a','undefined'],'Zero exponent property.',v));
+  add(v=>bankMCQ('Mathematics',ch,'The square of a real number is always:','non-negative',['negative','greater than one','irrational'],'For real x, x² ≥ 0.',v));
+ }
+ return fs;
+}
+const HIGH_YIELD_CHAPTERS=new Set([
+ 'Kinematics','Laws of Motion','Work, Energy & Power','Rotational Motion','Gravitation','Electrostatics','Capacitance','Current Electricity','Magnetic Effects of Current','Electromagnetic Induction','Alternating Current','Ray Optics','Wave Optics','Dual Nature of Matter','Thermodynamics','Centre of Mass & Collisions',
+ 'Some Basic Concepts of Chemistry','Atomic Structure','Chemical Bonding','Chemical Thermodynamics','Solutions','Equilibrium','Redox Reactions & Electrochemistry','Chemical Kinetics','Coordination Compounds','Basic Principles of Organic Chemistry','Hydrocarbons','Organic Compounds Containing Oxygen',
+ 'Complex Numbers & Quadratic Equations','Matrices','Determinants','Permutations & Combinations','Binomial Theorem','Sequences & Series','Limits, Continuity & Differentiability','Applications of Derivatives','Integral Calculus','Coordinate Geometry: Straight Lines','Circles','Conic Sections','Three-Dimensional Geometry','Vector Algebra','Probability','Trigonometry'
+]);
+function generateBank(){
+ let counts={};
+ for(const [subject,chapters] of Object.entries(JEE_CHAPTERS)) for(const chapter of chapters){
+  const current=JEE_QUESTIONS.filter(q=>q.s===subject&&q.c===chapter).length;
+  const target=HIGH_YIELD_CHAPTERS.has(chapter)?100:50;
+  const need=Math.max(0,target-current); const families=subject==='Physics'?P(chapter):subject==='Chemistry'?C(chapter):M(chapter);
+  const safeFamilies=families.length?families:[(v)=>bankMCQ(subject,chapter,`Choose the statement that is consistent with the core principles of ${chapter}.`,'use the defining law or concept',['ignore definitions','violate conservation laws','assume every case is identical'],'Apply the chapter’s governing definitions and conditions.',v)];
+  for(let k=0;k<need;k++){
+   const family=safeFamilies[k%safeFamilies.length],variant=Math.floor(k/safeFamilies.length),q=family(variant,k);
+   q.id=`${subject.slice(0,1)}-${chapter.replace(/[^A-Za-z0-9]/g,'').slice(0,12)}-${current+k+1}`;
+   JEE_QUESTIONS.push(q);
+  }
+  counts[chapter]=Math.max(target,current+need);
+ }
+ return counts;
+}
+const JEE_BANK_COUNTS=generateBank();
+
+/* Curated competitive layer: original, multi-step questions. These are not NTA PYQs. */
+const JEE_COMPETITIVE_QUESTIONS = [
+// PHYSICS — ELECTROSTATICS
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'Two fixed charges +q and +9q are placed at x = 0 and x = 4a respectively. At which point on the line joining them can a third positive test charge be placed so that the net electric force on it is zero?',o:['x = a','x = 2a','x = 3a','No such point exists'],a:0,e:'Between like charges the fields oppose. Set kq/x² = 9kq/(4a−x)², giving 4a−x = 3x and x = a.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'Charges +q and −4q are fixed at x = 0 and x = 3a. The electric field is zero at which point on the x-axis?',o:['x = −3a','x = a','x = 6a','There is no finite zero-field point'],a:0,e:'For unlike charges the zero-field point lies outside, on the side of the smaller magnitude charge. At x = −3a the distances are 3a and 6a, so kq/(3a)² = 4kq/(6a)².',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'A uniformly charged semicircular wire of radius R carries total charge Q. What is the magnitude of the electric field at its centre?',o:['2kQ/(πR²)','kQ/(πR²)','kQ/(2R²)','2kQ/R²'],a:0,e:'The horizontal components cancel by symmetry. The components along the symmetry axis add: E = (kλ/R)∫₀^π sinθ dθ = 2kλ/R = 2kQ/(πR²).',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'A thin ring of radius R carries charge Q uniformly. At what distance x from its centre on the axis is the electric-field magnitude maximum?',o:['R/√2','R','√2R','R/2'],a:0,e:'E(x)=kQx/(x²+R²)^(3/2). Differentiating and setting dE/dx = 0 gives R²−2x²=0, hence x=R/√2.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'Three charges +q, +q and −q are placed at the vertices of an equilateral triangle of side a. The electric potential at the centroid is:',o:['√3kq/a','0','3kq/a','−√3kq/a'],a:0,e:'The distance from the centroid to each vertex is a/√3. Potential is scalar: V = k(q+q−q)/(a/√3) = √3kq/a.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'An electric dipole of moment p is rotated slowly in a uniform field E from the stable equilibrium position to 120°. The external work done is:',o:['3pE/2','pE/2','pE','2pE'],a:0,e:'U = −pE cosθ. Thus Wext = ΔU = −pE cos120° − (−pE) = pE/2 + pE = 3pE/2.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'A point charge q is placed at a corner of a cube. The total electric flux through the surface of that cube is:',o:['q/(8ε₀)','q/(ε₀)','q/(4ε₀)','q/(24ε₀)'],a:0,e:'Eight identical cubes can be arranged around the corner charge to form a larger cube with the charge at its centre. The total flux q/ε₀ is shared equally, so one cube has q/(8ε₀).',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'A thin spherical shell of radius R carries charge Q uniformly on its surface. The electric field at a point r = R/2 from its centre is:',o:['Zero','kQ/R²','4kQ/R²','kQ/(4R²)'],a:0,e:'A Gaussian sphere of radius R/2 encloses no charge. By spherical symmetry and Gauss’s law, the field inside a uniformly charged thin spherical shell is zero.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'Three charges +q, +2q and −q are placed at the vertices of an equilateral triangle of side a. The electrostatic potential energy of the configuration is:',o:['−kq²/a','+kq²/a','−2kq²/a','+2kq²/a'],a:0,e:'U = k/a[q(2q) + q(−q) + 2q(−q)] = kq²/a(2−1−2) = −kq²/a.',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+{s:'Physics',c:'Electrostatics',t:'mcq',q:'Two positive charges q and 4q are separated by 9a. The point between them where the net electric field vanishes is at a distance from q equal to:',o:['3a','2a','4.5a','6a'],a:0,e:'Let the distance from q be x. Equating field magnitudes gives q/x² = 4q/(9a−x)², so 9a−x = 2x and x = 3a.',source:'Original practice',difficulty:'JEE Main · Tough'},
+// CHEMISTRY — SOLUTIONS
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'An ideal binary solution contains 1 mol of A and 2 mol of B. The pure-component vapour pressures are P°A = 100 kPa and P°B = 50 kPa. The total vapour pressure is:',o:['200/3 kPa','250/3 kPa','75 kPa','50 kPa'],a:0,e:'xA=1/3 and xB=2/3. By Raoult’s law, P = xAP°A+xBP°B = 100/3+100/3 = 200/3 kPa.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'An ideal solution of A and B has total vapour pressure 80 kPa. At the same temperature P°A = 100 kPa and P°B = 50 kPa. The mole fraction of A in the liquid is:',o:['0.60','0.40','0.50','0.80'],a:0,e:'80 = xA(100)+(1−xA)(50) = 50+50xA. Therefore xA=30/50=0.60.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'A 1.00 g non-electrolyte is dissolved in 100 g of water. The freezing-point depression is 0.186 K. Given Kf = 1.86 K kg mol⁻¹, the molar mass of the solute is:',o:['100 g mol⁻¹','50 g mol⁻¹','186 g mol⁻¹','10 g mol⁻¹'],a:0,e:'m = ΔTf/Kf = 0.186/1.86 = 0.1 mol kg⁻¹. In 0.1 kg solvent, moles = 0.01; M = 1.00/0.01 = 100 g mol⁻¹.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'A 0.10 mol L⁻¹ solution of AB₂ is 50% dissociated into A²⁺ and 2B⁻. Assuming ideal behaviour, its van’t Hoff factor is:',o:['2.0','1.5','2.5','3.0'],a:0,e:'For AB₂ → A²⁺ + 2B⁻, the number of particles increases by 2 per dissociated formula unit. i = 1 + (3−1)α = 1+2(0.5)=2.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'The osmotic pressure of a 0.020 mol L⁻¹ solution at 300 K is measured to be 0.739 atm. Taking R = 0.0821 L atm mol⁻¹ K⁻¹, the van’t Hoff factor is closest to:',o:['1.50','1.00','0.75','2.00'],a:0,e:'π=iCRT, so i = 0.739/(0.020×0.0821×300) ≈ 1.50.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'For the association 2A ⇌ A₂, the degree of association is 40%. The van’t Hoff factor is:',o:['0.80','1.20','0.60','1.40'],a:0,e:'Starting with 1 mol A, total particles after association are (1−α)+α/2 = 1−α/2. With α=0.40, i=0.80.',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'A gas has mole fraction 0.020 in a liquid solution at equilibrium. If its Henry constant is 100 bar, its partial pressure above the solution is:',o:['2.0 bar','0.20 bar','5.0 bar','50 bar'],a:0,e:'Henry’s law in the stated convention is p = KH x = 100×0.020 = 2.0 bar.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'Equal masses of two volatile liquids A and B (molar masses 20 and 40 g mol⁻¹) form an ideal solution. If P°A = 60 kPa and P°B = 30 kPa, the total vapour pressure is:',o:['50 kPa','45 kPa','40 kPa','30 kPa'],a:0,e:'For equal masses, nA:nB = 1/20:1/40 = 2:1. Thus xA=2/3 and xB=1/3; P=(2/3)60+(1/3)30=50 kPa.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'A non-electrolyte solution is 0.50 molal in water. Given Kf = 1.86 K kg mol⁻¹, the freezing point is lowered by:',o:['0.93 K','1.86 K','0.50 K','3.72 K'],a:0,e:'For a non-electrolyte, i=1. ΔTf=Kf m=1.86×0.50=0.93 K.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Chemistry',c:'Solutions',t:'mcq',q:'One mole of A and two moles of B form an ideal solution. If P°A = 80 kPa and P°B = 40 kPa, the total vapour pressure is:',o:['160/3 kPa','80 kPa','120/3 kPa','200/3 kPa'],a:0,e:'xA=1/3 and xB=2/3. P=(1/3)80+(2/3)40=80/3+80/3=160/3 kPa.',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+// MATHEMATICS — MATRICES
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'A 2×2 matrix A satisfies A²−5A+6I=O. If A is invertible, then A⁻¹ equals:',o:['(5I−A)/6','(A−5I)/6','(6I−A)/5','(A+5I)/6'],a:0,e:'Multiply A²−5A+6I=O by A⁻¹: A−5I+6A⁻¹=O. Hence A⁻¹=(5I−A)/6.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'Let A = [[1,1],[0,1]]. The entry in the first row, second column of A⁸ is:',o:['8','7','16','1'],a:0,e:'Write A=I+N where N=[[0,1],[0,0]] and N²=O. Hence Aⁿ=I+nN, so the required entry is 8.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'If A = [[2,1],[1,1]], then A⁻¹ is:',o:['[[1,−1],[−1,2]]','[[1,1],[1,2]]','[[2,−1],[−1,1]]','[[1,−2],[−1,2]]'],a:0,e:'det A=2·1−1·1=1. The inverse is (1/det A)[[1,−1],[−1,2]].',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'The system x+y=1 and 2x+ky=3 has no solution for:',o:['k=2','k=1','k=0','k=3'],a:0,e:'At k=2, the second left-hand side is twice the first, which would require 2x+2y=2, but the equation demands 3. The system is inconsistent.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'For A = [[x,1,1],[1,x,1],[1,1,x]], the matrix is singular when:',o:['x=1 or x=−2','x=0 or x=1','x=−1 or x=2','x=1 only'],a:0,e:'The determinant is (x−1)²(x+2). It vanishes at x=1 and x=−2.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'A square matrix A satisfies A²=A. Which expression is the inverse of I+A?',o:['I−A/2','I+A/2','I−A','A−I'],a:0,e:'(I+A)(I−A/2)=I+A−A/2−A²/2=I because A²=A. Thus I−A/2 is the inverse.',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'For any square matrix A, define S=(A+Aᵀ)/2 and K=(A−Aᵀ)/2. Which statement is always true?',o:['S is symmetric and K is skew-symmetric','S is skew-symmetric and K is symmetric','Both S and K are symmetric','Both S and K are skew-symmetric'],a:0,e:'Sᵀ=(Aᵀ+A)/2=S, while Kᵀ=(Aᵀ−A)/2=−K.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'If A is invertible and AX=B, then X is:',o:['A⁻¹B','BA⁻¹','AB⁻¹','B⁻¹A'],a:0,e:'Left-multiply AX=B by A⁻¹: A⁻¹AX=A⁻¹B, giving X=A⁻¹B. Matrix order cannot be interchanged.',source:'Original practice',difficulty:'JEE Main · Tough'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'If A is a 3×3 matrix with det(A)=−2, then det(3A⁻¹) equals:',o:['−27/2','−6','−27','−3/2'],a:0,e:'For a 3×3 matrix, det(3A⁻¹)=3³ det(A⁻¹)=27/det(A)=27/(−2)=−27/2.',source:'Original practice',difficulty:'JEE Advanced · Challenge'},
+{s:'Mathematics',c:'Matrices',t:'mcq',q:'If A and B are invertible matrices of the same order, the inverse of AB is:',o:['B⁻¹A⁻¹','A⁻¹B⁻¹','AB','BA'],a:0,e:'(AB)(B⁻¹A⁻¹)=A(BB⁻¹)A⁻¹=I. The order reverses under inversion.',source:'Original practice',difficulty:'JEE Main · Tough'}
+];
+JEE_COMPETITIVE_QUESTIONS.forEach((q,i)=>{q.id=`competitive-${i+1}`;JEE_QUESTIONS.push(q);JEE_BANK_COUNTS[q.c]=(JEE_BANK_COUNTS[q.c]||0)+1;});
+function isCompetitiveQuestion(q){return !!q.difficulty && (q.difficulty.includes('Tough')||q.difficulty.includes('Challenge'));}
+
+JEE_QUESTIONS.forEach((q,i)=>{if(!q.source)q.source='Original practice';if(!q.id)q.id='seed-'+(i+1);if(!q.difficulty)q.difficulty='Foundation / Concept Check';});
+
+let tc={questions:[],answers:{},marked:{},idx:0,seconds:0,timer:null,started:false,submitted:false,testName:'',recorded:false};
+const $=id=>document.getElementById(id);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shufflePick(items,count,seed=0){
+ const arr=items.slice(); let x=(seed+1)*2654435761>>>0;
+ for(let i=arr.length-1;i>0;i--){x=(1664525*x+1013904223)>>>0;const j=x%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}
+ return arr.slice(0,Math.min(count,arr.length));
+}
+function topicChapters(subject,topic){
+ const t=String(topic||'').toLowerCase(); const all=JEE_CHAPTERS[subject]||[];
+ const rules={
+  Physics:[
+   [/electrostatic potential|electrostatic charges|electrostatics/ ,['Electrostatics']], [/capacitance/ ,['Capacitance']], [/current electricity/ ,['Current Electricity']], [/moving charges|magnetic field/ ,['Magnetic Effects of Current']], [/magnetism.*emi.*ac|magnetism, emi|magnetism & matter/ ,['Magnetism & Matter','Electromagnetic Induction','Alternating Current']], [/emi|electromagnetic induction/ ,['Electromagnetic Induction']], [/ac circuit|alternating current/ ,['Alternating Current']], [/ray optics/ ,['Ray Optics']], [/wave optics/ ,['Wave Optics']], [/dual nature|photoelectric/ ,['Dual Nature of Matter']], [/atom|bohr/ ,['Atoms']], [/nuclei|radioactivity/ ,['Nuclei']], [/semiconductor|logic gate/ ,['Semiconductor Electronics']], [/kinematic/ ,['Kinematics']], [/laws of motion|newton/ ,['Laws of Motion']], [/work.*energy|power/ ,['Work, Energy & Power']], [/rotational/ ,['Rotational Motion']], [/gravitation/ ,['Gravitation']], [/thermodynamic/ ,['Thermodynamics']], [/kinetic theory/ ,['Kinetic Theory of Gases']], [/oscillation|shm/ ,['Oscillations']], [/wave/ ,['Waves']], [/vector/ ,['Vectors']], [/unit|measurement|error/ ,['Units, Dimensions & Errors']], [/solid|fluid|surface tension/ ,['Properties of Solids & Fluids']], [/thermal|calorimetry/ ,['Thermal Properties of Matter']], [/collision|centre of mass/ ,['Centre of Mass & Collisions']]
+  ],
+  Chemistry:[
+   [/solution/ ,['Solutions']], [/electrochem|redox/ ,['Redox Reactions & Electrochemistry']], [/kinetic/ ,['Chemical Kinetics']], [/coordination/ ,['Coordination Compounds']], [/d- and f|d block|f block/ ,['d- and f-Block Elements']], [/haloalkane|haloarene|halogen/ ,['Organic Compounds Containing Halogens']], [/alcohol|phenol|ether|aldehyde|ketone|carboxylic/ ,['Organic Compounds Containing Oxygen']], [/mole concept|stoichiometry|basic concept/ ,['Some Basic Concepts of Chemistry']], [/atomic structure/ ,['Atomic Structure']], [/bonding/ ,['Chemical Bonding']], [/equilibrium|ph/ ,['Equilibrium']], [/thermodynamic/ ,['Chemical Thermodynamics']], [/periodic/ ,['Periodic Table & Periodicity']], [/p-block/ ,['p-Block Elements']], [/hydrocarbon/ ,['Hydrocarbons']], [/amine|nitrogen/ ,['Organic Compounds Containing Nitrogen']], [/biomolecule/ ,['Biomolecules']], [/purification|characterisation/ ,['Purification & Characterisation']], [/organic reaction|goc|organic principles/ ,['Basic Principles of Organic Chemistry']], [/practical|salt analysis|titration/ ,['Principles Related to Practical Chemistry']]
+  ],
+  Mathematics:[
+   [/matrices/ ,['Matrices']], [/determinant/ ,['Determinants']], [/relations|functions|set/ ,['Sets, Relations & Functions']], [/inverse trig|trigonometry/ ,['Trigonometry']], [/complex|quadratic/ ,['Complex Numbers & Quadratic Equations']], [/permutation|combination/ ,['Permutations & Combinations']], [/binomial/ ,['Binomial Theorem']], [/sequence|series|ap/ ,['Sequences & Series']], [/continuity|differentiability|limit/ ,['Limits, Continuity & Differentiability']], [/maxima|minima|aod|applications of derivatives/ ,['Applications of Derivatives']], [/integrat/ ,['Integral Calculus']], [/differential equation/ ,['Differential Equations']], [/straight line|coordinate geometry/ ,['Coordinate Geometry: Straight Lines']], [/circle/ ,['Circles']], [/conic/ ,['Conic Sections']], [/three-dimensional|3d geometry/ ,['Three-Dimensional Geometry']], [/vector/ ,['Vector Algebra']], [/statistics/ ,['Statistics']], [/probability/ ,['Probability']]
+  ]
+ };
+ const found=[]; for(const [re,chapters] of (rules[subject]||[])){if(re.test(t))for(const c of chapters)if(all.includes(c)&&!found.includes(c))found.push(c);}
+ if(!found.length){const exact=all.find(c=>t.includes(c.toLowerCase())||c.toLowerCase().includes(t));if(exact)found.push(exact);}
+ return found;
+}
+function dayChapterRefs(day){
+ const refs=[];
+ // Final revision days intentionally sample from the whole chapter bank.
+ if(day>=52){for(const subject of ['Physics','Chemistry','Mathematics'])for(const chapter of JEE_CHAPTERS[subject])refs.push({s:subject,c:chapter});return refs;}
+ const subjects=['Physics','Chemistry','Mathematics'];
+ const today=typeof dayPlan==='function'?dayPlan(day):[];
+ subjects.forEach((subject,i)=>{
+  let chapters=topicChapters(subject,today[i]||'');
+  // On broad revision/mixed-practice days, reuse the most recently studied mapped chapters for that subject.
+  if(!chapters.length){
+   for(let d=day-1;d>=Math.max(0,day-12)&&!chapters.length;d--){
+    const previous=dayPlan(d);chapters=topicChapters(subject,previous[i]||'');
+   }
+  }
+  // A safety fallback keeps the day's test subject-balanced even at the start of the schedule.
+  if(!chapters.length)chapters=JEE_CHAPTERS[subject].slice(0,3);
+  for(const chapter of chapters)if(!refs.some(r=>r.s===subject&&r.c===chapter))refs.push({s:subject,c:chapter});
+ });
+ return refs;
+}
+function collectFromRefs(refs,perSubject,total,seed){
+ const pools={Physics:[],Chemistry:[],Mathematics:[]};
+ refs.forEach(r=>{pools[r.s].push(...JEE_QUESTIONS.filter(q=>q.s===r.s&&q.c===r.c));});
+ const selected=[];
+ for(const s of ['Physics','Chemistry','Mathematics']){
+  const unique=[...new Map(pools[s].map(q=>[q.id||q.q,q])).values()];
+  const offset=['Physics','Chemistry','Mathematics'].indexOf(s)*23;
+  const competitive=unique.filter(isCompetitiveQuestion);
+  const tough=shufflePick(competitive,Math.min(perSubject,competitive.length),seed+offset);
+  selected.push(...tough);
+  if(tough.length<perSubject){
+   const remaining=unique.filter(q=>!tough.includes(q));
+   selected.push(...shufflePick(remaining,perSubject-tough.length,seed+offset+701));
+  }
+ }
+ if(selected.length<total){const more=shufflePick(JEE_QUESTIONS.filter(q=>!selected.includes(q)),total-selected.length,seed+91);selected.push(...more);}
+ return selected;
+}
+function getPool(kind,day=0,mockNo=0,chapterRef=null,count=20){
+ if(kind==='sample')return collectFromRefs([{s:'Physics',c:'Kinematics'},{s:'Chemistry',c:'Chemical Bonding'},{s:'Mathematics',c:'Complex Numbers & Quadratic Equations'}],5,15,11);
+ if(kind==='chapter'&&chapterRef){
+  const full=JEE_QUESTIONS.filter(q=>q.s===chapterRef.s&&q.c===chapterRef.c);
+  const tough=shufflePick(full.filter(isCompetitiveQuestion),Math.min(count,full.filter(isCompetitiveQuestion).length),mockNo+day*7+chapterRef.c.length);
+  const rest=shufflePick(full.filter(q=>!isCompetitiveQuestion(q)),Math.max(0,Math.min(count,full.length)-tough.length),mockNo+day*7+chapterRef.c.length+911);
+  return [...tough,...rest];
+ }
+ if(kind==='daily')return collectFromRefs(dayChapterRefs(day),8,24,day+101);
+ if(kind==='weekly'){
+  const start=Math.floor(day/7)*7,refs=[];for(let d=start;d<=Math.min(59,start+5);d++)refs.push(...dayChapterRefs(d));
+  return collectFromRefs([...new Map(refs.map(r=>[r.s+'|'+r.c,r])).values()],20,60,day+201);
+ }
+ if(kind==='monthly'){
+  const start=Math.max(0,day-27),refs=[];for(let d=start;d<=day;d++)refs.push(...dayChapterRefs(d));
+  return collectFromRefs([...new Map(refs.map(r=>[r.s+'|'+r.c,r])).values()],25,75,day+301);
+ }
+ if(kind==='half'){
+  const refs=[];for(let d=0;d<=day;d++)refs.push(...dayChapterRefs(d));
+  return collectFromRefs([...new Map(refs.map(r=>[r.s+'|'+r.c,r])).values()],25,75,day+401);
+ }
+ if(kind==='fullmock'){
+  const pools=['Physics','Chemistry','Mathematics'].map(s=>JEE_QUESTIONS.filter(q=>q.s===s));
+  const chosen=[];pools.forEach((p,i)=>chosen.push(...shufflePick(p,25,mockNo*37+i*11+701)));
+  return chosen;
+ }
+ return [];
+}
+function startPool(pool,name,minutes){
+ if(!pool.length){alert('No questions are linked to this topic yet. Please choose another day or chapter.');return;}
+ if(tc.timer)clearInterval(tc.timer);
+ tc={questions:pool,answers:{},marked:{},idx:0,seconds:minutes*60,timer:null,started:true,submitted:false,testName:name,recorded:false};
+ if(typeof showTab==='function')showTab('testWindowView');
+ document.body.classList.add('testing');
+ $('tcTestTitle').textContent=name;$('tcTestMeta').textContent=`${pool.length} questions · ${minutes} minutes · +4 correct / −1 incorrect`;
+ $('tcExam').classList.remove('hidden');$('tcResult').classList.add('hidden');
+ renderQuestion();renderPalette();updateTimer();
+ tc.timer=setInterval(()=>{tc.seconds--;updateTimer();if(tc.seconds<=0)submitTest(true);},1000);
+}
+function renderQuestion(){
+ const q=tc.questions[tc.idx];if(!q)return;
+ $('tcQNo').textContent=`Question ${tc.idx+1} of ${tc.questions.length}`;
+ $('tcSubjectTag').textContent=q.s+' · '+q.c;
+ $('tcSourceTag').textContent=(q.source||'Original practice')+' · '+(q.difficulty||'Foundation / Concept Check');
+ $('tcQuestion').textContent=q.q;
+ const chosen=tc.answers[tc.idx];
+ $('tcOptions').innerHTML=q.t==='mcq'?q.o.map((o,i)=>`<label class="tc-option ${chosen===i?'chosen':''}"><input type="radio" name="tcAnswer" value="${i}" ${chosen===i?'checked':''}><b>${'ABCD'[i]}.</b> ${safe(o)}</label>`).join(''):`<label class="field-label">Numerical answer</label><input id="tcNumeric" class="field" type="number" step="1" value="${chosen??''}" placeholder="Enter answer">`;
+ $('tcOptions').querySelectorAll('input[type=radio]').forEach(el=>el.onchange=()=>{tc.answers[tc.idx]=Number(el.value);renderPalette();renderQuestion();});
+ const num=$('tcNumeric');if(num)num.oninput=()=>{tc.answers[tc.idx]=num.value===''?undefined:Number(num.value);renderPalette();};
+ $('tcMark').textContent=tc.marked[tc.idx]?'Unmark for review':'Mark for review';
+ $('tcPrev').disabled=tc.idx===0;$('tcNext').textContent=tc.idx===tc.questions.length-1?'Last question':'Save & Next';
+}
+function renderPalette(){
+ $('tcPalette').innerHTML=tc.questions.map((q,i)=>{const a=tc.answers[i]!==undefined&&tc.answers[i]!=='';return `<button class="tc-palette ${tc.marked[i]?'review':a?'answered':'unanswered'}" data-q="${i}">${i+1}</button>`;}).join('');
+ $('tcPalette').querySelectorAll('button').forEach(b=>b.onclick=()=>{tc.idx=Number(b.dataset.q);renderQuestion();});
+ $('tcAnswered').textContent=tc.questions.filter((q,i)=>tc.answers[i]!==undefined&&tc.answers[i]!=='').length;
+ $('tcMarked').textContent=Object.values(tc.marked).filter(Boolean).length;
+}
+function updateTimer(){const m=Math.floor(tc.seconds/60),s=tc.seconds%60;$('tcTimer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function move(d){tc.idx=Math.max(0,Math.min(tc.questions.length-1,tc.idx+d));renderQuestion();renderPalette();}
+function submitTest(auto=false){
+ if(tc.submitted)return;if(!auto&&!confirm('Submit this test now?'))return;
+ tc.submitted=true;if(tc.timer)clearInterval(tc.timer);
+ let correct=0,wrong=0,blank=0;
+ tc.questions.forEach((q,i)=>{const a=tc.answers[i];if(a===undefined||a==='')blank++;else if(Number(a)===Number(q.a))correct++;else wrong++;});
+ const score=correct*4-wrong,max=tc.questions.length*4;
+ $('tcExam').classList.add('hidden');$('tcResult').classList.remove('hidden');
+ $('tcResultScore').textContent=`${score} / ${max}`;
+ $('tcResultMeta').textContent=`${correct} correct · ${wrong} incorrect · ${blank} unattempted · ${Math.round(correct/Math.max(1,tc.questions.length)*100)}% accuracy`;
+ $('tcReview').innerHTML=tc.questions.map((q,i)=>{const a=tc.answers[i],ok=a!==undefined&&a!==''&&Number(a)===Number(q.a);return `<div class="tc-review-item"><b>Q${i+1}. ${safe(q.q)}</b><p class="note">Your answer: ${safe(a===undefined?'Not attempted':q.t==='mcq'?q.o[Number(a)]:a)} · Correct answer: ${safe(q.t==='mcq'?q.o[q.a]:q.a)}</p><p>${ok?'✓':'✗'} ${safe(q.e)}</p></div>`;}).join('');
+ if(!tc.recorded){const record={name:tc.testName,date:new Date().toISOString().slice(0,10),score,maxScore:max,accuracy:Math.round(correct/Math.max(1,tc.questions.length)*100),note:`${correct} correct, ${wrong} wrong, ${blank} blank`};try{if(typeof state!=='undefined'&&typeof save==='function'){state.mocks=state.mocks||[];state.mocks.push(record);save();}}catch(e){}tc.recorded=true;}
+}
+function backToTestCentre(){if(tc.started&&!tc.submitted){if(!confirm('Leave this test? Your current answers will be lost.'))return;if(tc.timer)clearInterval(tc.timer);}document.body.classList.remove('testing');showTab('tests');tc.started=false;}
+function launchSuite(kind,day=0,mockNo=0){
+ const config={sample:['Before Day 1 · Diagnostic Sample',30],daily:[`Day ${day+1} · Daily Topic Test`,60],weekly:[`Week ${Math.floor(day/7)+1} · Cumulative Test`,180],monthly:[`Day ${day+1} · Monthly Revision`,180],half:[`Day ${day+1} · Half-Syllabus Revision`,180],fullmock:[`JEE Main Full Mock ${mockNo+1}`,180]};
+ const [name,mins]=config[kind]||['JEE Practice',60];const pool=getPool(kind,day,mockNo);startPool(pool,name,mins);
+}
+function startChapterTest(subject,chapter){
+ const count=Number($('tcChapterCount').value||50),available=JEE_QUESTIONS.filter(q=>q.s===subject&&q.c===chapter).length;
+ const take=Math.min(count,available);if(count>available)$('tcChapterCount').value='50';if(!take){alert('No questions are available for this chapter.');return;}
+ const minutes=Math.max(30,Math.ceil(take*1.5));const pool=getPool('chapter',Number($('tcDaySelect').value||0),Date.now(),{s:subject,c:chapter},take);
+ startPool(pool,`${chapter} · ${subject} Chapter Test`,minutes);
+}
+function renderSchedule(){
+ const ds=$('tcDaySelect');if(!ds)return;
+ ds.innerHTML=Array.from({length:60},(_,i)=>`<option value="${i}">Day ${i+1}</option>`).join('');
+ ds.value=String(Math.max(0,Math.min(59,Number(state?.dayIndex||0))));ds.onchange=showScheduledDay;
+ $('tcLoadDay').onclick=showScheduledDay;$('tcDailyStart').onclick=()=>launchSuite('daily',Number(ds.value||0));
+ showScheduledDay();
+}
+function showScheduledDay(){
+ const i=Number($('tcDaySelect').value||0),p=dayPlan(i),refs=dayChapterRefs(i);
+ const d=new Date('2026-11-23T00:00:00');d.setDate(d.getDate()+i);
+ $('tcDayInfo').innerHTML=`<b>Day ${i+1} · ${d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})}</b><br>Daily test: 9:30–10:30 PM · 60 minutes`;
+ $('tcDayTopics').innerHTML=p.map((topic,j)=>{const s=['Physics','Chemistry','Mathematics'][j],chs=topicChapters(s,topic);return `<div class="tc-topic-card"><span class="eyebrow">${s}</span><b>${safe(topic)}</b><small>${chs.length?chs.map(c=>safe(c)).join(' · '):'Revision / cumulative topic'}</small></div>`;}).join('');
+ $('tcDayCoverage').textContent=refs.length>12?`This is a full-syllabus revision day: questions are sampled across ${refs.length} chapter packs.`:`This daily test selects questions from ${refs.length} mapped chapter pack(s): ${refs.map(r=>r.c).join(', ')}.`;
+ const weekly=(i+1)%7===0;const cards=[['daily','Start this day’s topic test','24 questions · 60 min']];
+ if(weekly)cards.push(['weekly','Start weekly cumulative test','60 questions · 3 hours']);
+ if([27,55].includes(i))cards.push(['half','Start half-syllabus revision','75 questions · 3 hours']);
+ $('tcDayTests').innerHTML=cards.map(([k,l,meta])=>`<div class="tc-suite-row"><div><b>${l}</b><small>${meta}</small></div><button type="button" data-daytest="${k}">Open Test Window</button></div>`).join('');
+ $('tcDayTests').querySelectorAll('[data-daytest]').forEach(b=>b.onclick=()=>launchSuite(b.dataset.daytest,i));
+}
+function renderSuiteCards(){
+ const cards=[['sample','Before Day 1 · Sample','15 questions · 30 min'],['daily','Daily topic test','Topics from selected day · 60 min'],['weekly','Weekly cumulative','Recent 6 study days · 3 hours'],['monthly','Monthly revision','Cumulative chapters · 3 hours'],['half','Half-syllabus revision','Cumulative practice · 3 hours']];
+ $('tcSuiteCards').innerHTML=cards.map(([k,n,d])=>`<div class="tc-suite-card"><b>${n}</b><small>${d}</small><button type="button" class="primary" data-suite="${k}">Open Test Window</button></div>`).join('');
+ $('tcSuiteCards').querySelectorAll('[data-suite]').forEach(b=>b.onclick=()=>launchSuite(b.dataset.suite,Number($('tcDaySelect').value||0)));
+}
+function renderMockSeries(){
+ $('tcMockSeries').innerHTML=Array.from({length:10},(_,i)=>`<div class="tc-mock-card"><b>Full Mock ${i+1}</b><small>75 questions · 180 min</small><button type="button" data-mock="${i}">Start Mock</button></div>`).join('');
+ $('tcMockSeries').querySelectorAll('[data-mock]').forEach(b=>b.onclick=()=>launchSuite('fullmock',Number($('tcDaySelect').value||0),Number(b.dataset.mock)));
+}
+function renderCatalogues(){
+ const subject=$('tcFilterSubject').value,query=$('tcSearch').value.trim().toLowerCase();
+ const groups=Object.entries(JEE_CHAPTERS).filter(([s])=>subject==='All'||s===subject).map(([s,chs])=>{
+  const rows=chs.filter(ch=>!query||ch.toLowerCase().includes(query)).map(ch=>{
+   const pack=JEE_QUESTIONS.filter(q=>q.s===s&&q.c===ch),n=pack.length,competitive=pack.filter(isCompetitiveQuestion).length,priority=HIGH_YIELD_CHAPTERS.has(ch);
+   return `<div class="tc-chapter-row"><div class="tc-chapter-label"><b>${safe(ch)}</b><small>${n} total · ${competitive} JEE challenge questions · ${priority?'High-priority pack':'Core pack'}</small></div><button type="button" data-chapter="${safe(s)}|${safe(ch)}">Start chapter test</button></div>`;
+  }).join('');
+  return rows?`<div class="tc-subject-group"><h3>${s}</h3>${rows}</div>`:'';
+ }).filter(Boolean);
+ $('tcChapterCatalogue').innerHTML=groups.join('')||'<div class="empty">No chapter matches your search.</div>';
+ $('tcChapterCatalogue').querySelectorAll('[data-chapter]').forEach(b=>b.onclick=()=>{const [s,ch]=b.dataset.chapter.split('|');startChapterTest(s,ch);});
+ $('tcBankSummary').textContent=`${Object.values(JEE_BANK_COUNTS).length} chapter packs · ${Object.values(JEE_BANK_COUNTS).reduce((a,b)=>a+b,0).toLocaleString('en-IN')} questions in the chapter bank`;
+}
+function setCentrePage(page){
+ document.querySelectorAll('.tc-centre-page').forEach(el=>el.classList.toggle('active',el.id===({daily:'tcCentreDaily',chapters:'tcCentreChapters',mocks:'tcCentreMocks'}[page]||'tcCentreDaily')));
+ document.querySelectorAll('[data-centre-page]').forEach(el=>el.classList.toggle('active',el.dataset.centrePage===page));
+}
+function initTestCentre(){
+ if(window.tcInitialised)return;
+ try{
+  document.querySelectorAll('[data-centre-page]').forEach(b=>b.onclick=()=>setCentrePage(b.dataset.centrePage));
+  setCentrePage('daily');
+  $('tcFilterSubject').onchange=renderCatalogues;$('tcSearch').oninput=renderCatalogues;
+  $('tcSampleStart').onclick=()=>launchSuite('sample',Number($('tcDaySelect').value||0));
+  $('tcLoadDay').onclick=showScheduledDay;$('tcDailyStart').onclick=()=>launchSuite('daily',Number($('tcDaySelect').value||0));
+  $('tcPrev').onclick=()=>move(-1);$('tcNext').onclick=()=>move(1);
+  $('tcMark').onclick=()=>{tc.marked[tc.idx]=!tc.marked[tc.idx];renderQuestion();renderPalette();};
+  $('tcClear').onclick=()=>{delete tc.answers[tc.idx];renderQuestion();renderPalette();};
+  $('tcSubmit').onclick=()=>submitTest(false);$('tcExit').onclick=backToTestCentre;$('tcAgain').onclick=backToTestCentre;
+  renderSchedule();renderSuiteCards();renderMockSeries();renderCatalogues();window.tcInitialised=true;
+ }catch(e){console.error('Test Centre setup error:',e);alert('Test Centre could not initialise: '+e.message);}
+}
+window.JEE_MISSION_INIT_TEST_CENTRE=initTestCentre;
+window.JEE_MISSION_START_SAMPLE=()=>{initTestCentre();launchSuite('sample',0);};
+document.addEventListener('click',e=>{if(e.target.closest('[data-tab="tests"]'))setTimeout(initTestCentre,0);});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTestCentre,{once:true});else initTestCentre();
+window.addEventListener('load',initTestCentre,{once:true});
+

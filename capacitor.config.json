@@ -1,0 +1,8 @@
+{
+  "appId": "com.jeemission.control",
+  "appName": "JEE Mission Control",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
