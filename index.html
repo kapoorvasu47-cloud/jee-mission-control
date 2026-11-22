@@ -890,7 +890,7 @@ function showScheduledDay(){
  if([27,55].includes(i))cards.push(['half','Start half-syllabus revision','75 questions · 3 hours']);
  $('tcDayTests').innerHTML=cards.map(([k,l,meta])=>`<div class="tc-suite-row"><div><b>${l}</b><small>${meta}</small></div><button type="button" data-daytest="${k}">Open Test Window</button></div>`).join('');
  $('tcDayTests').querySelectorAll('[data-daytest]').forEach(b=>b.onclick=()=>launchSuite(b.dataset.daytest,i));
- const topicRows=p.map((topic,j)=>{const d=dayTopicQuestions(i,j);return '<div class="tc-suite-row"><div><b>'+safe(d.subject)+' · '+safe(topic)+'</b><small>'+d.questions.length+' questions available · target 50 · '+(d.questions.length>=50?'Full topic bank ready':'More questions needed')+'</small></div><button type="button" class="primary" data-topic-test="${j}">Start 50-question test</button></div>';}).join('');
+ const topicRows=p.map((topic,j)=>{const d=dayTopicQuestions(i,j);return '<div class="tc-suite-row"><div><b>'+safe(d.subject)+' · '+safe(topic)+'</b><small>'+d.questions.length+' questions available · target 50 · '+(d.questions.length>=50?'Full topic bank ready':'More questions needed')+'</small></div><button type="button" class="primary" data-topic-test="'+j+'">Start 50-question test</button></div>';}).join('');
  $('tcDayTests').insertAdjacentHTML('beforeend','<div class="eyebrow" style="margin:14px 0 6px">INDIVIDUAL TOPIC TESTS</div>'+topicRows);
  $('tcDayTests').querySelectorAll('[data-topic-test]').forEach(b=>b.onclick=()=>startDayTopicTest(i,Number(b.dataset.topicTest)));
 
